@@ -1,0 +1,31 @@
+#ifndef MODELS_PERSPECTIVE_CAMERA_HPP
+#define MODELS_PERSPECTIVE_CAMERA_HPP
+
+#include "../Camera.hpp"
+
+namespace models {
+	class PerspectiveCamera : public Camera {
+	private:
+	    float fov;
+	    float near;
+	    float far;
+	
+	public:
+		PerspectiveCamera(glm::vec3 position, float fov = 45.f);
+	
+	private:
+		glm::mat4 calcProjection();
+	
+	public:
+		float getFOV();
+		void setFOV(float fov);
+	
+		float getNear();
+		void setNear(float near);
+	
+		float getFar();
+		void setFar(float far);
+	};
+}
+
+#endif
