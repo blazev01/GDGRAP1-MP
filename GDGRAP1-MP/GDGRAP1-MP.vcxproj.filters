@@ -49,6 +49,9 @@
     <Filter Include="Header Files\Config">
       <UniqueIdentifier>{4a1b2bf0-f7b4-4c84-8f4b-2fe730d5a215}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Enums">
+      <UniqueIdentifier>{89f74a2f-871a-47bd-8870-637567503d39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="Config\Settings.hpp">
       <Filter>Header Files\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Enum\MeshType.hpp">
+      <Filter>Header Files\Enums</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

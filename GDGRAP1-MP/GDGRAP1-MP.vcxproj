@@ -46,6 +46,7 @@
     <ClInclude Include="Model\Camera.hpp" />
     <ClInclude Include="Model\Camera\OrthoCamera.hpp" />
     <ClInclude Include="Model\Camera\PerspectiveCamera.hpp" />
+    <ClInclude Include="Model\Enum\MeshType.hpp" />
     <ClInclude Include="Model\Light\DirLight.hpp" />
     <ClInclude Include="Model\Model3D.hpp" />
     <ClInclude Include="Model\Light.hpp" />

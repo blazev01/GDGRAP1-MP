@@ -1,5 +1,5 @@
-#ifndef CONTROLLER_GAME_HPP
-#define CONTROLLER_GAME_HPP
+#ifndef CONTROLLERS_GAME_HPP
+#define CONTROLLERS_GAME_HPP
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -37,13 +37,16 @@ namespace controllers {
 
         Skybox* Sky;
 
+        VAO* SkyVAO;
+        VBO* SkyVBO;
+        EBO* SkyEBO;
+
         std::vector<std::vector<GLfloat>*> meshes;
         std::vector<GLuint*> textures;
         std::vector<GLuint*> normals;
 
         std::vector<VAO*> VAOs;
         std::vector<VBO*> VBOs;
-        std::vector<EBO*> EBOs;
 
         std::vector<Camera*> Cameras;
         Camera* ActiveCam;
@@ -60,7 +63,6 @@ namespace controllers {
     private:
         void update();
         void render();
-        void buffer();
 
     private:
         void createSkybox();

@@ -41,12 +41,15 @@ void Game::run() {
 
         this->render();
 
-        this->buffer();
+        glfwSwapBuffers(this->window);
     }
 
     for (VAO* p : this->VAOs) { p->deleteVertexArray(); }
     for (VBO* p : this->VBOs) { p->deleteVertexBuffer(); }
-    for (EBO* p : this->EBOs) { p->deleteElementBuffer(); }
+
+    this->SkyVAO->deleteVertexArray();
+    this->SkyVBO->deleteVertexBuffer();
+    this->SkyEBO->deleteElementBuffer();
 
     glfwTerminate();
 }
@@ -63,25 +66,19 @@ void Game::render() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     /*Render Here*/
-    Sky->draw(this->ActiveCam);
-
-    for (Model3D* p : Entities) {
-        p->draw(this->ActiveCam, this->Lights);
-    }
-}
-
-void Game::buffer() {
-    /*Draw From Buffers Here*/
-    this->VAOs[0]->bind();
+    //Skybox render
+    this->Sky->draw(this->ActiveCam);
+    this->SkyVAO->bind();
     this->Sky->buffer();
 
-    for (int i = 1; i < this->VAOs.size(); i++) {
+    //object render
+    for (int i = 0; i < this->Entities.size(); i++) {
+        this->Entities[i]->draw(this->ActiveCam, this->Lights);
         this->VAOs[i]->bind();
-        glDrawArrays(GL_TRIANGLES, 0, (*meshes[i - 1]).size() / 14);
+        glDrawArrays(GL_TRIANGLES, 0, (*this->Entities[i]->getMesh()).size() / 14);
     }
-
-    glfwSwapBuffers(this->window);
 }
 
 void Game::createSkybox() {
@@ -115,25 +112,25 @@ void Game::createSkybox() {
     }
 
     //object creation
-    this->Sky = new Skybox(SkyShaders, skyTex);
+    this->Sky = new Skybox(this->SkyShaders, skyTex);
 
     //buffer creation
     int skyDimensions[]{ 3 };
 
-    this->VAOs.push_back(new VAO);
-    this->VBOs.push_back(new VBO);
-    this->EBOs.push_back(new EBO);
+    this->SkyVAO = new VAO;
+    this->SkyVBO = new VBO;
+    this->SkyEBO = new EBO;
 
-    this->VAOs[0]->bind();
+    this->SkyVAO->bind();
 
-    this->VBOs[0]->bind();
-    this->VBOs[0]->bufferData(this->Sky->getVertices());
-    this->VAOs[0]->createPointers(skyDimensions, 1);
+    this->SkyVBO->bind();
+    this->SkyVBO->bufferData(this->Sky->getVertices());
+    this->SkyVAO->createPointers(skyDimensions, 1);
 
-    this->EBOs[0]->bind();
-    this->EBOs[0]->bufferData(this->Sky->getIndices());
+    this->SkyEBO->bind();
+    this->SkyEBO->bufferData(this->Sky->getIndices());
 
-    this->VAOs[0]->unbind();
+    this->SkyVAO->unbind();
 }
 
 void Game::createShaders() {
@@ -142,8 +139,8 @@ void Game::createShaders() {
 
 void Game::createMeshes() {
     std::string meshPaths[]{
-        "3D/Elf01_posed/Elf01_posed.obj",
-        "3D/Cat Lamp/Cat Lamp.obj"
+        "3D/Elf01_posed/Elf01_posed.obj"
+        //, "3D/Cat Lamp/Cat Lamp.obj"
     };
 
     for (int i = 0; i < sizeof(meshPaths) / sizeof(std::string); i++) {
@@ -153,8 +150,8 @@ void Game::createMeshes() {
 
 void Game::createTextures() {
     std::string texPaths[]{
-        "3D/brickwall.jpg",
-        "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
+        "3D/brickwall.jpg"
+        //, "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
     };
 
     for (int i = 0; i < sizeof(texPaths) / sizeof(std::string); i++) {
@@ -165,14 +162,13 @@ void Game::createTextures() {
 
         TextureManager::getInstance()->load(texPaths[i].c_str(), true, GL_TEXTURE_2D);
         glGenerateMipmap(GL_TEXTURE_2D);
-        std::cout << texPaths[i] << " loaded." << std::endl;
     }
 }
 
 void Game::createNormals() {
     std::string normalPaths[]{
-        "3D/brickwall_normal.jpg",
-        "3D/Cat Lamp/Cat_Lamp_Normal.tga.png"
+        "3D/brickwall_normal.jpg"
+        //, "3D/Cat Lamp/Cat_Lamp_Normal.tga.png"
     };
 
     for (int i = 0; i < sizeof(normalPaths) / sizeof(std::string); i++) {
@@ -189,31 +185,40 @@ void Game::createNormals() {
 void Game::createBuffers() {
     int dimensions[]{ 3,3,2,3,3 };
 
-    for (int i = 1; i < meshes.size(); i++) {
+    for (int i = 0; i < this->meshes.size(); i++) {
         this->VAOs.push_back(new VAO);
         this->VBOs.push_back(new VBO);
 
         this->VAOs[i]->bind();
         this->VBOs[i]->bind();
 
-        this->VBOs[i]->bufferData(*meshes[i - 1]);
+        this->VBOs[i]->bufferData(*this->meshes[i]);
         this->VAOs[i]->createPointers(dimensions, 5);
 
         this->VBOs[i]->unbind();
         this->VAOs[i]->unbind();
+        std::cout << "Buffers created." << std::endl;
     }
 }
 
 void Game::createObjects() {
     //Entity creation
     std::string entityNames[]{
-        "Elf Girl",
-        "Cat Lamp"
+        "Elf Girl"
+        //, "Cat Lamp"
     };
 
     std::vector<Model3D*> Entities;
     for (int i = 0; i < sizeof(entityNames) / sizeof(std::string); i++) {
-        this->Entities.push_back(new Model3D(entityNames[i], meshes[i], BaseShaders, textures[i], normals[i], 0.05f));
+        this->Entities.push_back(new Model3D(
+            entityNames[i],
+            this->meshes[i],
+            this->BaseShaders,
+            this->textures[i],
+            this->normals[i],
+            0.05f,
+            glm::vec3(0.0f, i * 0.5f, 0.0f)
+        ));
     }
 
     //Elf Girl source: https://sketchfab.com/3d-models/elf-girl-52f2e84961b94760b7805c178890d644
@@ -221,9 +226,9 @@ void Game::createObjects() {
 
     //Camera creation
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, 1.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
-    this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, 1.0f, 10.0f)));
+    this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, 1.0f, 5.0f)));
     //Setting Active Camera
-    this->ActiveCam = Cameras[0];
+    this->ActiveCam = this->Cameras[0];
 
     //Light creation
     this->Lights.push_back(new PointLight(glm::vec3(2.0f)));
