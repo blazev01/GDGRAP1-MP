@@ -1,6 +1,6 @@
 #include "VBO.hpp"
 
-using namespace renderer;
+using namespace renderers;
 
 VBO::VBO() {
     glGenBuffers(1, &this->vertexBuffer);
@@ -23,6 +23,6 @@ void VBO::unbind() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void VBO::deleteVBO() {
+void VBO::deleteVertexBuffer() {
     glDeleteBuffers(1, &this->vertexBuffer);
 }

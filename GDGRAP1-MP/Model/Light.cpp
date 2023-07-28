@@ -2,16 +2,21 @@
 
 using namespace models;
 
-Light::Light(glm::vec3 position) {
+Light::Light(glm::vec3 position, std::string type) {
+    this->type = type;
     this->position = position;
     this->diffuseCol = glm::vec3(1.0f, 1.0f, 1.0f);
     this->ambientCol = glm::vec3(1.0f, 1.0f, 1.0f);
     this->specularCol = glm::vec3(1.0f, 1.0f, 1.0f);
 
     this->ambientStr = 0.1f;
-    this->specularStr = 0.5f;
+    this->specularStr = 2.0f;
 
-    this->shininess = 16.0f;
+    this->shininess = 32.0f;
+}
+
+std::string Light::getType() {
+    return this->type;
 }
 
 glm::vec3 Light::getPosition() {

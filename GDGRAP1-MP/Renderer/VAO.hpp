@@ -1,9 +1,9 @@
-#ifndef RENDERER_VAO_HPP
-#define RENDERER_VAO_HPP
+#ifndef RENDERERS_VAO_HPP
+#define RENDERERS_VAO_HPP
 
 #include <glad/glad.h>
 
-namespace renderer {
+namespace renderers {
 	class VAO {
     private:
         GLuint vertexArray;
@@ -12,13 +12,12 @@ namespace renderer {
         VAO();
 
     public:
-        template<size_t attribs>
-        void createPointers(int(&attribDimentions)[attribs]);
+        void createPointers(int dimensions[], int attribs);
     
     public:
         void bind();
         void unbind();
-        void deleteVAO();
+        void deleteVertexArray();
     };
 }
 

@@ -27,6 +27,7 @@
     <ClCompile Include="Model\Camera.cpp" />
     <ClCompile Include="Model\Camera\OrthoCamera.cpp" />
     <ClCompile Include="Model\Camera\PerspectiveCamera.cpp" />
+    <ClCompile Include="Model\Light\DirLight.cpp" />
     <ClCompile Include="Model\Model3D.cpp" />
     <ClCompile Include="Model\Light.cpp" />
     <ClCompile Include="Model\Light\PointLight.cpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="Model\Camera.hpp" />
     <ClInclude Include="Model\Camera\OrthoCamera.hpp" />
     <ClInclude Include="Model\Camera\PerspectiveCamera.hpp" />
+    <ClInclude Include="Model\Light\DirLight.hpp" />
     <ClInclude Include="Model\Model3D.hpp" />
     <ClInclude Include="Model\Light.hpp" />
     <ClInclude Include="Model\Light\PointLight.hpp" />

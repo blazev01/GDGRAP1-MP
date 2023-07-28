@@ -1,20 +1,18 @@
 #ifndef MODELS_SKYBOX_HPP
 #define MODELS_SKYBOX_HPP
 
+#include <vector>
+
 #include <glad/glad.h>
-
-#include "../tiny_obj_loader.h"
-
-#include "../stb_image.h"
 
 #include "../Renderer/VFShaders.hpp"
 #include "Camera.hpp"
 
 namespace models {
-    using namespace renderer;
+    using namespace renderers;
 	class Skybox {
     private:
-        const float vertices[24]{
+        float vertices[24]{
             -1.f, -1.f,  1.f,
              1.f, -1.f,  1.f,
              1.f, -1.f, -1.f,
@@ -25,7 +23,7 @@ namespace models {
             -1.f,  1.f, -1.f
         };
 
-        const unsigned int indices[36]{
+        unsigned int indices[36]{
             1,2,6,
             6,5,1,
 
@@ -45,20 +43,21 @@ namespace models {
             6,2,3
         };
 
-        unsigned int texture;
-
-        unsigned int VAO;
-        unsigned int VBO;
-        unsigned int EBO;
+        VFShaders* Shaders;
+        GLuint* texture;
 
     public:
-        Skybox(std::string* faces);
+        Skybox(VFShaders* Shaders, GLuint* texture);
 
     public:
-        void render(VFShaders& Shaders, Camera& Cam);
+        void draw(Camera* Cam);
         void buffer();
 
-        void deleteBuffers();
+    public:
+        std::vector<GLfloat> getVertices();
+
+        std::vector<GLuint> getIndices();
+
     };
 }
 

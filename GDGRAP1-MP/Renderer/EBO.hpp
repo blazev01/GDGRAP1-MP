@@ -1,11 +1,11 @@
-#ifndef RENDERER_EBO_HPP
-#define RENDERER_EBO_HPP
+#ifndef RENDERERS_EBO_HPP
+#define RENDERERS_EBO_HPP
 
 #include <vector>
 
 #include <glad/glad.h>
 
-namespace renderer {
+namespace renderers {
     class EBO {
     private:
         GLuint elementBuffer;
@@ -19,7 +19,7 @@ namespace renderer {
     public:
         void bind();
         void unbind();
-        void deleteEBO();
+        void deleteElementBuffer();
     };
 }
 

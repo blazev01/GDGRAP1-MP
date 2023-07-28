@@ -2,19 +2,19 @@
 
 using namespace models;
 
-OrthoCamera::OrthoCamera(glm::vec3 position)
-: Camera(position) {
-    this->near = -1.0f;
-    this->far = 1.0f;
-    this->projection = this->computeProjection();
+OrthoCamera::OrthoCamera(glm::vec3 position, glm::vec3 center)
+: Camera(position, center) {
+    this->near = 0.1f;
+    this->far = 100.0f;
+    this->projection = this->calcProjection();
 }
 
-glm::mat4 OrthoCamera::computeProjection() {
+glm::mat4 OrthoCamera::calcProjection() {
     return glm::ortho(
-        -0.5f,
-        0.5f,
-        -0.5f,
-        0.5f,
+        -1.0f,
+        1.0f,
+        -1.0f,
+        1.0f,
         this->near,
         this->far
     );
@@ -26,7 +26,7 @@ float OrthoCamera::getNear() {
 
 void OrthoCamera::setNear(float near) {
     this->near = near;
-    this->projection = this->computeProjection();
+    this->projection = this->calcProjection();
 }
 
 float OrthoCamera::getFar() {
@@ -35,5 +35,5 @@ float OrthoCamera::getFar() {
 
 void OrthoCamera::setFar(float far) {
     this->far = far;
-    this->projection = this->computeProjection();
+    this->projection = this->calcProjection();
 }

@@ -3,7 +3,7 @@
 using namespace models;
 
 PointLight::PointLight(glm::vec3 position)
-    : Light(position) {
+    : Light(position, "PLight") {
     this->constant = 1.0;
     this->linear = 0.02;
     this->quadratic = 0.0015;

@@ -1,6 +1,7 @@
 #ifndef MODELS_PERSPECTIVE_CAMERA_HPP
 #define MODELS_PERSPECTIVE_CAMERA_HPP
 
+#include "../../Config/Settings.hpp"
 #include "../Camera.hpp"
 
 namespace models {
@@ -11,7 +12,7 @@ namespace models {
 	    float far;
 	
 	public:
-		PerspectiveCamera(glm::vec3 position, float fov = 45.f);
+		PerspectiveCamera(glm::vec3 position, glm::vec3 center = glm::vec3(0.0f), float fov = 45.f);
 	
 	private:
 		glm::mat4 calcProjection();

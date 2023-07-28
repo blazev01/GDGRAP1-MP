@@ -2,50 +2,116 @@
 
 using namespace models;
 
-Camera::Camera(glm::vec3 position) {
+Camera::Camera(glm::vec3 position, glm::vec3 center) {
     this->position = position;
-    this->rotation = glm::vec3(0.0f);
-
-    this->distance = 10.0f;
+    this->center = center;
     this->worldUp = glm::normalize(glm::vec3(0.f, 1.f, 0.f));
-    this->center = this->position - this->calcFront(this->distance);
-    this->view = glm::lookAt(this->position, this->center, this->worldUp);
 
+    this->orientation = this->calcOrientation();
+    this->view = this->calcView();
     this->projection = glm::mat4(1.0f);
 }
 
-void Camera::move(float fb, float rl, float ud) {
-    if (fb) this->position += this->calcFront(fb);
-    if (rl) this->position += this->calcRight(rl);
-    if (ud) this->position.y += ud;
-
-    this->center = this->position - this->calcFront(this->distance);
-    this->view = glm::lookAt(this->position, this->center, this->worldUp);
+void Camera::translate(glm::vec3 position) {
+    glm::mat4 tMat = glm::translate(glm::mat4(1.0f), position);
+    glm::vec4 posV4 = glm::vec4(this->position, 1.0f);
+    this->position = glm::vec3(tMat * posV4);
+    this->view = this->calcView();
 }
 
-void Camera::tilt(float x, float y, float z) {
-    this->rotation += glm::vec3(x, y, z);
-
-    this->center = this->position - this->calcFront(this->distance);
-    this->view = glm::lookAt(this->position, this->center, this->worldUp);
+void Camera::translate(float x, float y, float z) {
+    this->translate(glm::vec3(x, y, z));
 }
 
-glm::vec3 Camera::calcFront(float distance) {
-    glm::vec3 front(0.0f, 0.0f, 0.0f);
-    front.x = distance * sin(glm::radians(this->rotation.x)) * sin(glm::radians(this->rotation.z));
-    front.y = distance * cos(glm::radians(this->rotation.y)) * sin(glm::radians(this->rotation.z));
-    front.z = distance * cos(glm::radians(this->rotation.x)) * cos(glm::radians(this->rotation.y));
-    return front;
+void Camera::move(float f, float r, float u) {
+    if (f != 0.0f) {
+        this->center += this->F * f;
+        this->position += this->F * f;
+    }
+
+    if (r != 0.0f) {
+        this->center += this->R * r;
+        this->position += this->R * r;
+    }
+    
+    if (u != 0.0f) {
+        this->center += this->U * u;
+        this->position += this->U * u;
+    }
+
+    this->orientation = this->calcOrientation();
+    this->view = this->calcView();
 }
-glm::vec3 Camera::calcRight(float distance) {
-    glm::vec3 right(0.0f, 0.0f, 0.0f);
-    right.x = distance * cos(glm::radians(this->rotation.z));
-    right.z = distance * sin(glm::radians(this->rotation.x));
-    return right;
+
+void Camera::tilt(float theta, glm::vec3 axis) {
+    if (axis.x) this->orientation = glm::rotate(this->orientation, theta, this->R);
+    if (axis.y) this->orientation = glm::rotate(this->orientation, theta, this->U);
+    if (axis.z) this->orientation = glm::rotate(this->orientation, theta, this->F);
+
+    this->R.x = this->orientation[0][0];
+    this->R.y = this->orientation[1][0];
+    this->R.z = this->orientation[2][0];
+
+    this->U.x = this->orientation[0][1];
+    this->U.y = this->orientation[1][1];
+    this->U.z = this->orientation[2][1];
+
+    this->F.x = -this->orientation[0][2];
+    this->F.y = -this->orientation[1][2];
+    this->F.z = -this->orientation[2][2];
+
+    this->center = glm::vec3(this->F + this->position);
+
+    this->view = this->calcView();
+}
+
+void Camera::tilt(float theta, float x, float y, float z) {
+    this->tilt(theta, glm::vec3(x, y, z));
+}
+
+glm::mat4 Camera::calcView() {
+    glm::mat4 positionMat = glm::translate(glm::mat4(1.0f), this->position * -1.0f);
+    return glm::mat4(this->orientation * positionMat);
+}
+
+glm::mat4 Camera::calcOrientation() {
+    this->F = glm::normalize(glm::vec3(this->center - this->position));
+    this->R = glm::normalize(glm::cross(F, this->worldUp));
+    this->U = glm::normalize(glm::cross(R, F));
+
+    glm::mat4 orientation = glm::mat4(1.0f);
+    
+    orientation[0][0] = this->R.x;
+    orientation[1][0] = this->R.y;
+    orientation[2][0] = this->R.z;
+
+    orientation[0][1] = this->U.x;
+    orientation[1][1] = this->U.y;
+    orientation[2][1] = this->U.z;
+
+    orientation[0][2] = -this->F.x;
+    orientation[1][2] = -this->F.y;
+    orientation[2][2] = -this->F.z;
+
+    return orientation;
 }
 
 glm::vec3 Camera::getPosition() {
     return this->position;
+}
+
+void Camera::setPosition(glm::vec3 position) {
+    this->position = position;
+    this->view = glm::lookAt(this->position, this->center, this->worldUp);
+}
+
+glm::vec3 Camera::getCenter() {
+    return this->center;
+}
+
+void Camera::setCenter(glm::vec3 center) {
+    this->center = center;
+    this->view = glm::lookAt(this->position, this->center, this->worldUp);
 }
 
 glm::mat4 Camera::getView() {

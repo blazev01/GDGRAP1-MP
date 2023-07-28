@@ -10,10 +10,10 @@ namespace models {
         float far;
 
     public:
-        OrthoCamera(glm::vec3 position);
+        OrthoCamera(glm::vec3 position, glm::vec3 center = glm::vec3(0.0f));
 
     private:
-        glm::mat4 computeProjection();
+        glm::mat4 calcProjection();
 
     public:
         float getNear();

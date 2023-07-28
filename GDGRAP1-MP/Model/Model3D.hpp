@@ -9,32 +9,35 @@
 #include "../Renderer/VFShaders.hpp"
 #include "Camera.hpp"
 #include "Light.hpp"
+#include "Light/DirLight.hpp"
+#include "Light/PointLight.hpp"
+#include "Light/SpotLight.hpp"
 
 namespace models {
-    using namespace renderer;
+    using namespace renderers;
     class Model3D {
     private:
         std::string name;
         std::vector<GLfloat>* mesh;
         glm::mat4 transformation;
+        VFShaders* Shaders;
         GLuint* texture;
-        //Material* Mat;
+        GLuint* normalMap;
 
     public:
         Model3D(
             std::string name,
-            std::vector<GLfloat>* model3D,
-            GLuint* texture,
-            //Material* Mat,
+            std::vector<GLfloat>* mesh,
+            VFShaders* Shaders,
+            GLuint* texture = NULL,
+            GLuint* normalMap = NULL,
             float scale = 1.0f,
             glm::vec3 position = glm::vec3(0.0f));
 
     public:
-        void draw(VFShaders& Shaders, Camera& Cam, Light& Lit);
-
-    private:
-        void drawLight(VFShaders& Shaders, Light& Lit);
-
+        void draw(Camera* Cam, std::vector<Light*> Lights);
+        void drawLight(Camera* Cam, Light* Lit);
+        
     public:
         void translate(glm::vec3 translation);
         void translate(float x, float y, float z);
@@ -45,6 +48,8 @@ namespace models {
         void rotate(float theta, float x, float y, float z);
 
     public:
+        void setPosition(glm::vec3 position);
+
         std::vector<GLfloat>* getMesh();
         glm::mat4 getTransformation();
     };

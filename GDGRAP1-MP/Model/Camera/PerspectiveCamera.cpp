@@ -2,8 +2,8 @@
 
 using namespace models;
 
-PerspectiveCamera::PerspectiveCamera(glm::vec3 position, float fov)
-	: Camera(position) {
+PerspectiveCamera::PerspectiveCamera(glm::vec3 position, glm::vec3 center, float fov)
+	: Camera(position, center) {
 	this->fov = fov;
 	this->near = 0.1f;
 	this->far = 100.0f;
@@ -13,7 +13,7 @@ PerspectiveCamera::PerspectiveCamera(glm::vec3 position, float fov)
 glm::mat4 PerspectiveCamera::calcProjection() {
 	return glm::perspective(
 		glm::radians(this->fov),
-		16.f / 9.f,
+		ASPECT,
 		this->near,
 		this->far
 	);

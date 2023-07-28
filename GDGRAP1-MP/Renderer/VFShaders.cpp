@@ -1,6 +1,6 @@
 #include "VFShaders.hpp"
 
-using namespace renderer;
+using namespace renderers;
 
 VFShaders::VFShaders(std::string vertPath, std::string fragPath) {
     this->shaderProgram = glCreateProgram();
@@ -28,12 +28,12 @@ void VFShaders::setMat4(const GLchar* varName, glm::mat4 m4) {
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m4));
 }
 
-void VFShaders::setTexture(const GLchar* varName, GLenum active, GLuint* texture) {
+void VFShaders::setTexture(const GLchar* varName, GLuint* texture, GLenum active, GLenum type, GLint unit) {
     glUseProgram(this->shaderProgram);
     GLuint textureLoc = glGetUniformLocation(this->shaderProgram, varName);
     glActiveTexture(active);
-    glBindTexture(GL_TEXTURE_2D, *texture);
-    glUniform1i(textureLoc, 0);
+    glBindTexture(type, *texture);
+    glUniform1i(textureLoc, unit);
 }
 
 void VFShaders::createShader(std::string path, GLenum shaderType) {
@@ -48,4 +48,8 @@ void VFShaders::createShader(std::string path, GLenum shaderType) {
     glCompileShader(newShader);
 
     glAttachShader(this->shaderProgram, newShader);
+}
+
+GLuint& VFShaders::getShaderProgram() {
+    return this->shaderProgram;
 }

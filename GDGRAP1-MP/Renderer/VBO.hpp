@@ -1,11 +1,11 @@
-#ifndef RENDERER_VBO_HPP
-#define RENDERER_VBO_HPP
+#ifndef RENDERERS_VBO_HPP
+#define RENDERERS_VBO_HPP
 
 #include <vector>
 
 #include <glad/glad.h>
 
-namespace renderer {
+namespace renderers {
     class VBO {
     private:
         GLuint vertexBuffer;
@@ -19,7 +19,7 @@ namespace renderer {
     public:
         void bind();
         void unbind();
-        void deleteVBO();
+        void deleteVertexBuffer();
     };
 }
 

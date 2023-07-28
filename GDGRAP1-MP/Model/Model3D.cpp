@@ -4,39 +4,69 @@ using namespace models;
 
 Model3D::Model3D(
     std::string name,
-    std::vector<GLfloat>* model3D,
+    std::vector<GLfloat>* mesh,
+    VFShaders* Shaders,
     GLuint* texture,
-    //Material* Mat,
+    GLuint* normalMap,
     float scale,
     glm::vec3 position) {
     this->name = name;
     this->mesh = mesh;
+    this->Shaders = Shaders;
     this->texture = texture;
-    //this->Mat = Mat;
-
+    this->normalMap = normalMap;
+    this->transformation = glm::mat4(1.0f);
     this->translate(position);
     this->scale(scale);
 }
 
-void Model3D::draw(VFShaders& Shaders, Camera& Cam, Light& Lit) {
-    Shaders.setMat4("transform", this->transformation);
-    Shaders.setMat4("view", Cam.getView());
-    Shaders.setMat4("projection", Cam.getProjection());
+void Model3D::draw(Camera* Cam, std::vector<Light*> Lights) {
+    this->Shaders->setMat4("transform", this->transformation);
+    this->Shaders->setMat4("view", Cam->getView());
+    this->Shaders->setMat4("projection", Cam->getProjection());
 
-    Shaders.setTexture("tex0", GL_TEXTURE0, this->texture);
-    Shaders.setVec3("cameraPos", Cam.getPosition());
+    for (Light* p : Lights) {
+        this->drawLight(Cam, p);
+    }
 
-    this->drawLight(Shaders, Lit);
+    this->Shaders->setTexture("tex0", this->texture, GL_TEXTURE0, GL_TEXTURE_2D, 0);
+    this->Shaders->setTexture("normTex", this->normalMap, GL_TEXTURE1, GL_TEXTURE_2D, 1);
 }
 
-void Model3D::drawLight(VFShaders& Shaders, Light& Lit) {
-    Shaders.setVec3("lightPos", Lit.getPosition());
-    Shaders.setVec3("diffuseColor", Lit.getDiffuseCol());
-    Shaders.setFloat("ambientStr", Lit.getAmbientStr());
-    Shaders.setVec3("ambientColor", Lit.getAmbientCol());
-    Shaders.setFloat("specularStr", Lit.getSpecularStr());
-    Shaders.setVec3("specularColor", Lit.getSpecularCol());
-    Shaders.setFloat("shininess", Lit.getShininess());
+void Model3D::drawLight(Camera* Cam, Light* Lit) {
+    std::string lightPos = Lit->getType() + ".position";
+
+    std::string diffCol = Lit->getType() + ".diffuseCol";
+    std::string ambiCol = Lit->getType() + ".ambientCol";
+    std::string specCol = Lit->getType() + ".specularCol";
+
+    std::string ambiStr = Lit->getType() + ".ambientStr";
+    std::string specStr = Lit->getType() + ".specularStr";
+    
+    std::string shine = Lit->getType() + ".shininess";
+
+    this->Shaders->setVec3("cameraPos", Cam->getPosition());
+
+    this->Shaders->setVec3(lightPos.c_str(), Lit->getPosition());
+    this->Shaders->setVec3(diffCol.c_str(), Lit->getDiffuseCol());
+    this->Shaders->setVec3(ambiCol.c_str(), Lit->getAmbientCol());
+    this->Shaders->setVec3(specCol.c_str(), Lit->getSpecularCol());
+
+    this->Shaders->setFloat(ambiStr.c_str(), Lit->getAmbientStr());
+    this->Shaders->setFloat(specStr.c_str(), Lit->getSpecularStr());
+    
+    this->Shaders->setFloat(shine.c_str(), Lit->getShininess());
+
+    if (Lit->getType() == "PLight") {
+        PointLight* PLight = (PointLight*)Lit;
+        std::string con = Lit->getType() + ".con";
+        std::string lin = Lit->getType() + ".lin";
+        std::string quad = Lit->getType() + ".quad";
+
+        this->Shaders->setFloat(con.c_str(), PLight->getConstant());
+        this->Shaders->setFloat(lin.c_str(), PLight->getLinear());
+        this->Shaders->setFloat(quad.c_str(), PLight->getQuadratic());
+    }
 }
 
 void Model3D::translate(glm::vec3 translation) {
@@ -75,6 +105,10 @@ void Model3D::rotate(float theta, glm::vec3 axis) {
 
 void Model3D::rotate(float theta, float x, float y, float z) {
     this->rotate(theta, glm::vec3(x, y, z));
+}
+
+void Model3D::setPosition(glm::vec3 position) {
+    this->transformation = glm::translate(glm::mat4(this->transformation[1][1]), position);
 }
 
 std::vector<GLfloat>* Model3D::getMesh() {

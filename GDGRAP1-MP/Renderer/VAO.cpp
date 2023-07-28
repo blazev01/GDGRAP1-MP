@@ -1,16 +1,15 @@
 #include "VAO.hpp"
 
-using namespace renderer;
+using namespace renderers;
 
 VAO::VAO() {
     glGenVertexArrays(1, &this->vertexArray);
 }
 
-template<size_t attribs>
-void VAO::createPointers(int(&attribDimentions)[attribs]) {
+void VAO::createPointers(int dimensions[], int attribs) {
     int totalAttribs = 0;
     for (int i = 0; i < attribs; i++) {
-        totalAttribs += attribDimentions[i];
+        totalAttribs += dimensions[i];
     }
 
     int usedAttribs = 0;
@@ -18,14 +17,14 @@ void VAO::createPointers(int(&attribDimentions)[attribs]) {
         GLintptr newPointer = usedAttribs * sizeof(float);
         glVertexAttribPointer(
             i,
-            attribDimentions[i],
+            dimensions[i],
             GL_FLOAT,
             GL_FALSE,
             totalAttribs * sizeof(float),
             (void*)newPointer
         );
         glEnableVertexAttribArray(i);
-        usedAttribs += attribDimentions[i];
+        usedAttribs += dimensions[i];
     }
 
 }
@@ -38,6 +37,6 @@ void VAO::unbind() {
     glBindVertexArray(0);
 }
 
-void VAO::deleteVAO() {
+void VAO::deleteVertexArray() {
     glDeleteBuffers(1, &this->vertexArray);
 }

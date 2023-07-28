@@ -1,8 +1,13 @@
 #include "TextureManager.hpp"
 
-using namespace controller;
+#define STB_IMAGE_IMPLEMENTATION
+#include "../../stb_image.h"
 
-GLuint* TextureManager::load(const char* path, GLenum active) {
+using namespace controllers;
+
+void TextureManager::load(const char* path, bool flipVert, GLenum target) {
+    stbi_set_flip_vertically_on_load(flipVert);
+    
     int imgWidth;
     int imgHeight;
     int colorChannels;
@@ -21,13 +26,8 @@ GLuint* TextureManager::load(const char* path, GLenum active) {
     else if (colorChannels > 3)
         channels = GL_RGBA;
 
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glActiveTexture(active);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
     glTexImage2D(
-        GL_TEXTURE_2D,
+        target,
         0,
         channels,
         imgWidth,
@@ -38,10 +38,7 @@ GLuint* TextureManager::load(const char* path, GLenum active) {
         data
     );
 
-    glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
-
-    return &texture;
 }
 
 TextureManager* TextureManager::SHARED_INSTANCE = NULL;

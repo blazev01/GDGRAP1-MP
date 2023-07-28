@@ -1,11 +1,15 @@
 #ifndef MODELS_LIGHT_HPP
 #define MODELS_LIGHT_HPP
 
+#include <string>
+
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace models {
 	class Light {
     protected:
+        std::string type;
+
         glm::vec3 position;
 
         glm::vec3 diffuseCol;
@@ -18,9 +22,11 @@ namespace models {
         float shininess;
 
     public:
-        Light(glm::vec3 position);
+        Light(glm::vec3 position, std::string type = "DLight");
 
     public:
+        std::string getType();
+
         glm::vec3 getPosition();
         void setPosition(glm::vec3 position);
 

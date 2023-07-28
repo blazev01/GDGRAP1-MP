@@ -1,19 +1,19 @@
-#ifndef CONTROLLER_MESH_MANAGER_HPP
-#define CONTROLLER_MESH_MANAGER_HPP
+#ifndef CONTROLLERS_MESH_MANAGER_HPP
+#define CONTROLLERS_MESH_MANAGER_HPP
 
 #include <iostream>
+#include <vector>
 
 #include <glad/glad.h>
+#include <glm/gtc/matrix_transform.hpp>
 
-#include "../../tiny_obj_loader.h"
-
-namespace controller {
+namespace controllers {
 	class MeshManager {
     private:
         //std::vector<std::vector<GLfloat>*> meshes;
 
     public:
-        std::vector<GLfloat>* load(std::string path);
+        std::vector<GLfloat> load(std::string path);
 
     private:
         static MeshManager* SHARED_INSTANCE;
