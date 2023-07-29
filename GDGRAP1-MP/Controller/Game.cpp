@@ -347,10 +347,14 @@ void Game::update() {
     switch (activeCam) {
         case 0://3rd pov
             this->ActiveCam->move(zV, xV, yV);
+            if (xTilt != 0) this->ActiveCam->tilt(xTilt, 1.0f, 0.0f, 0.0f);
+            if (yTilt != 0) this->ActiveCam->tilt(yTilt, 0.0f, 1.0f, 0.0f);
             //this->ActiveCam->setCenter(glm::vec3(zV, yV, xV));
             break;
         case 1://1st pov
             this->ActiveCam->move(zV, xV, yV);
+            if (xTilt != 0) this->ActiveCam->tilt(xTilt, 1.0f, 0.0f, 0.0f);
+            if (yTilt != 0) this->ActiveCam->tilt(yTilt, 0.0f, 1.0f, 0.0f);
             break;
         case 2://top down
             this->ActiveCam->setCenter(glm::vec3(xV, yV, zV));
@@ -560,6 +564,7 @@ void Game::createObjects() {
     //this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, yV + 25.0f, 1.0f))); original
     //Setting Active Camera
     this->ActiveCam = this->Cameras[0];
+    this->Player1 = new Player(glm::vec3(1.0f), glm::vec3(0.0f));
 
     std::cout << "Current Camera: " << activeCam << std::endl;
 

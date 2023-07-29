@@ -32,6 +32,7 @@
     <ClCompile Include="Model\Light.cpp" />
     <ClCompile Include="Model\Light\PointLight.cpp" />
     <ClCompile Include="Model\Light\SpotLight.cpp" />
+    <ClCompile Include="Model\Player.cpp" />
     <ClCompile Include="Model\Skybox.cpp" />
     <ClCompile Include="Renderer\EBO.cpp" />
     <ClCompile Include="Renderer\VAO.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="Model\Light.hpp" />
     <ClInclude Include="Model\Light\PointLight.hpp" />
     <ClInclude Include="Model\Light\SpotLight.hpp" />
+    <ClInclude Include="Model\Player.hpp" />
     <ClInclude Include="Model\Skybox.hpp" />
     <ClInclude Include="Renderer\EBO.hpp" />
     <ClInclude Include="Renderer\VAO.hpp" />

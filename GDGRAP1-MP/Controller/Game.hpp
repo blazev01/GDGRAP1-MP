@@ -27,6 +27,7 @@
 #include "../Model/Light.hpp"
 #include "../Model/Light/PointLight.hpp"
 #include "../Model/Skybox.hpp"
+#include "../Model/Player.hpp"
 
 namespace controllers {
     using namespace renderers;
@@ -57,6 +58,8 @@ namespace controllers {
 
         std::vector<Light*> Lights;
         std::vector<Model3D*> Entities;
+
+        Player* Player1;
 
     public:
         Game();

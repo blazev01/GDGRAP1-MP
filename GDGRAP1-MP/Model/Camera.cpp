@@ -69,6 +69,42 @@ void Camera::tilt(float theta, float x, float y, float z) {
     this->tilt(theta, glm::vec3(x, y, z));
 }
 
+void Camera::orbit(float theta, glm::vec3 axis) {
+    glm::vec3 revF = glm::normalize(glm::vec3(this->position - this->center));
+    glm::vec3 revR = glm::normalize(glm::cross(F, this->worldUp));
+    glm::vec3 revU = glm::normalize(glm::cross(R, F));
+
+    glm::mat4 orientation = glm::mat4(1.0f);
+
+    orientation[0][0] = revR.x;
+    orientation[1][0] = revR.y;
+    orientation[2][0] = revR.z;
+
+    orientation[0][1] = revU.x;
+    orientation[1][1] = revU.y;
+    orientation[2][1] = revU.z;
+
+    orientation[0][2] = -revF.x;
+    orientation[1][2] = -revF.y;
+    orientation[2][2] = -revF.z;
+
+    if (axis.x) this->orientation = glm::rotate(this->orientation, theta, revR);
+    if (axis.y) this->orientation = glm::rotate(this->orientation, theta, revU);
+    if (axis.z) this->orientation = glm::rotate(this->orientation, theta, revF);
+
+    revF.x = -this->orientation[0][2];
+    revF.y = -this->orientation[1][2];
+    revF.z = -this->orientation[2][2];
+
+    this->position = glm::vec3(revF + this->center);
+    this->orientation = this->calcOrientation();
+    this->view = this->calcView();
+}
+
+void Camera::orbit(float theta, float x, float y, float z) {
+    this->orbit(theta, glm::vec3(x, y, z));
+}
+
 glm::mat4 Camera::calcView() {
     glm::mat4 positionMat = glm::translate(glm::mat4(1.0f), this->position * -1.0f);
     return glm::mat4(this->orientation * positionMat);
@@ -102,7 +138,8 @@ glm::vec3 Camera::getPosition() {
 
 void Camera::setPosition(glm::vec3 position) {
     this->position = position;
-    this->view = glm::lookAt(this->position, this->center, this->worldUp);
+    this->orientation = this->calcOrientation();
+    this->view = this->calcView();
 }
 
 glm::vec3 Camera::getCenter() {
@@ -111,7 +148,8 @@ glm::vec3 Camera::getCenter() {
 
 void Camera::setCenter(glm::vec3 center) {
     this->center = center;
-    this->view = glm::lookAt(this->position, this->center, this->worldUp);
+    this->orientation = this->calcOrientation();
+    this->view = this->calcView();
 }
 
 glm::mat4 Camera::getView() {

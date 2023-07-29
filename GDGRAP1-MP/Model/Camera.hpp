@@ -27,6 +27,8 @@ namespace models {
         void move(float f, float r, float u);
         void tilt(float theta, glm::vec3 axis);
         void tilt(float theta, float x, float y, float z);
+        void orbit(float theta, glm::vec3 axis);
+        void orbit(float theta, float x, float y, float z);
 
     protected:
         glm::mat4 calcOrientation();

@@ -37,9 +37,6 @@
     <Filter Include="Header Files\Controllers">
       <UniqueIdentifier>{0ae5ed6c-f8c5-4fb7-b470-d8ff70131fee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\sCamera">
-      <UniqueIdentifier>{ae04c62c-6ddd-4945-99f5-92abb9b0a943}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Renderers">
       <UniqueIdentifier>{4e484015-d1db-45cc-b6e8-9fd76e232a69}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,9 @@
     </Filter>
     <Filter Include="Header Files\Enums">
       <UniqueIdentifier>{89f74a2f-871a-47bd-8870-637567503d39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Cameras">
+      <UniqueIdentifier>{ae04c62c-6ddd-4945-99f5-92abb9b0a943}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +108,9 @@
     <ClCompile Include="Model\Skybox.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Player.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
@@ -128,14 +131,11 @@
     <ClInclude Include="Renderer\VBO.hpp">
       <Filter>Header Files\Renderers</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Camera.hpp">
-      <Filter>Header Files\sCamera</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Camera\OrthoCamera.hpp">
-      <Filter>Header Files\sCamera</Filter>
+      <Filter>Header Files\Cameras</Filter>
     </ClInclude>
     <ClInclude Include="Model\Camera\PerspectiveCamera.hpp">
-      <Filter>Header Files\sCamera</Filter>
+      <Filter>Header Files\Cameras</Filter>
     </ClInclude>
     <ClInclude Include="Model\Light.hpp">
       <Filter>Header Files\Lights</Filter>
@@ -178,6 +178,12 @@
     </ClInclude>
     <ClInclude Include="Model\Enum\TexType.hpp">
       <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Camera.hpp">
+      <Filter>Header Files\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Player.hpp">
+      <Filter>Header Files\Models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
