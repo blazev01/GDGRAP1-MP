@@ -342,12 +342,12 @@ void Game::createSkybox() {
     this->SkyShaders = new VFShaders("Shaders/Skybox.vert", "Shaders/Skybox.frag");
 
     const char* facesSkybox[]{
-        "Skybox/rainbow_rt.png",
-        "Skybox/rainbow_lf.png",
-        "Skybox/rainbow_up.png",
-        "Skybox/rainbow_dn.png",
-        "Skybox/rainbow_ft.png",
-        "Skybox/rainbow_bk.png"
+        "Skybox/nightsky_rt.png",
+        "Skybox/nightsky_lf.png",
+        "Skybox/nightsky_up.png",
+        "Skybox/nightsky_dn.png",
+        "Skybox/nightsky_ft.png",
+        "Skybox/nightsky_bk.png"
     };
 
     //texture creation
