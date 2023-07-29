@@ -55,22 +55,29 @@ void keyCallback(
     if (key == GLFW_KEY_W &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
+        zV = moveSpeed;
+        /*
         if (activeCam == 2) {
             zOrtho += moveSpeed;
         }
         else {
             zV = moveSpeed;
         }
+        */
     }
     else if (key == GLFW_KEY_S &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
+        zV = -moveSpeed;
+        /*
         if (activeCam == 2) {
             zOrtho -= moveSpeed;
         }
         else {
             zV = -moveSpeed;
         }
+        */
+        
     }
     else if ((key == GLFW_KEY_W ||
         key == GLFW_KEY_S) &&
@@ -339,9 +346,11 @@ void Game::update() {
 
     switch (activeCam) {
         case 0://3rd pov
-            this->ActiveCam->move(0.0f, xV, yV);
+            this->ActiveCam->move(zV, xV, yV);
+            //this->ActiveCam->setCenter(glm::vec3(zV, yV, xV));
             break;
         case 1://1st pov
+            this->ActiveCam->move(zV, xV, yV);
             break;
         case 2://top down
             this->ActiveCam->setCenter(glm::vec3(xV, yV, zV));
@@ -350,6 +359,7 @@ void Game::update() {
             break;
     }
 
+    //original code
     //this->ActiveCam->move(zV, xV, yV);
 
 }
@@ -544,8 +554,8 @@ void Game::createObjects() {
 
     //this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, 1.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
     //Camera creation
-    this->Cameras.push_back(new PerspectiveCamera(glm::vec3(xV, yV + 2.0f, zV - 5.0f), glm::vec3(0.0f, 1.0f, 0.0f)));//0, 3rd pov
-    this->Cameras.push_back(new PerspectiveCamera(glm::vec3(xV, yV, zV + 1.0f), glm::vec3(0.0f, 1.0f, 0.0f)));//1, 1st pov
+    this->Cameras.push_back(new PerspectiveCamera(glm::vec3(xV, yV + 2.0f, zV - 6.0f), glm::vec3(0.0f, 1.0f, 0.0f)));//0, 3rd pov
+    this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, 0.0f, zV + 1.0f), glm::vec3(0.0f, 1.0f, 0.0f)));//1, 1st pov
     this->Cameras.push_back(new OrthoCamera(orthoPos));//2, top down
     //this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, yV + 25.0f, 1.0f))); original
     //Setting Active Camera
