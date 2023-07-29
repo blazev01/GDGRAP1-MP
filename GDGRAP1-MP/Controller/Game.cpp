@@ -37,6 +37,13 @@ double clickY = 0;
 float xTilt = 0.0f;
 float yTilt = 0.0f;
 
+//for ortho cam
+float xOrtho = 0;
+float yOrtho = yV + 25.0f;
+float zOrtho = 1.0f;
+
+glm::vec3 orthoPos = glm::vec3(xOrtho, yOrtho, zOrtho);
+
 void keyCallback(
     GLFWwindow* window,
     int key,
@@ -48,12 +55,22 @@ void keyCallback(
     if (key == GLFW_KEY_W &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        zV = moveSpeed;
+        if (activeCam == 2) {
+            zOrtho += moveSpeed;
+        }
+        else {
+            zV = moveSpeed;
+        }
     }
     else if (key == GLFW_KEY_S &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        zV = -moveSpeed;
+        if (activeCam == 2) {
+            zOrtho -= moveSpeed;
+        }
+        else {
+            zV = -moveSpeed;
+        }
     }
     else if ((key == GLFW_KEY_W ||
         key == GLFW_KEY_S) &&
@@ -192,14 +209,16 @@ void keyCallback(
 
     if (key == GLFW_KEY_1 &&
         action == GLFW_RELEASE) {
-        if (activeCam == 0 || activeCam == 2) activeCam = 1;
-        else if (activeCam == 1 || activeCam == 2) activeCam = 0;
+        if (activeCam == 1 || activeCam == 2) activeCam = 0;
+        else if (activeCam == 0 || activeCam == 2) activeCam = 1;
+        std::cout << "Camera: " << activeCam << std::endl;
     }
 
     if (key == GLFW_KEY_2 &&
         action == GLFW_RELEASE) {
         if (activeCam == 0 || activeCam == 1) activeCam = 2;
         else if (activeCam == 2) activeCam = 0;
+        std::cout << "Camera: " << activeCam << std::endl;
     }
 
 }
@@ -318,7 +337,20 @@ void Game::update() {
     /*Update Game Objects Here*/
     this->ActiveCam = this->Cameras[activeCam];
 
-    this->ActiveCam->move(zV, xV, yV);
+    switch (activeCam) {
+        case 0://3rd pov
+            this->ActiveCam->move(0.0f, xV, yV);
+            break;
+        case 1://1st pov
+            break;
+        case 2://top down
+            this->ActiveCam->setCenter(glm::vec3(xV, yV, zV));
+            break;
+        default:
+            break;
+    }
+
+    //this->ActiveCam->move(zV, xV, yV);
 
 }
 
@@ -514,9 +546,12 @@ void Game::createObjects() {
     //Camera creation
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(xV, yV + 2.0f, zV - 5.0f), glm::vec3(0.0f, 1.0f, 0.0f)));//0, 3rd pov
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(xV, yV, zV + 1.0f), glm::vec3(0.0f, 1.0f, 0.0f)));//1, 1st pov
-    this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, yV + 25.0f, 1.0f)));//2, top down
+    this->Cameras.push_back(new OrthoCamera(orthoPos));//2, top down
+    //this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, yV + 25.0f, 1.0f))); original
     //Setting Active Camera
     this->ActiveCam = this->Cameras[0];
+
+    std::cout << "Current Camera: " << activeCam << std::endl;
 
     //Light creation
     this->Lights.push_back(new PointLight(glm::vec3(2.0f)));
