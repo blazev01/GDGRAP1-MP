@@ -4,6 +4,7 @@ using namespace models;
 
 Model3D::Model3D(
     std::string name,
+    MeshType Type,
     std::vector<GLfloat>* mesh,
     VFShaders* Shaders,
     GLuint* texture,
@@ -11,6 +12,7 @@ Model3D::Model3D(
     float scale,
     glm::vec3 position) {
     this->name = name;
+    this->Type = Type;
     this->mesh = mesh;
     this->Shaders = Shaders;
     this->texture = texture;
@@ -109,6 +111,10 @@ void Model3D::rotate(float theta, float x, float y, float z) {
 
 void Model3D::setPosition(glm::vec3 position) {
     this->transformation = glm::translate(glm::mat4(this->transformation[1][1]), position);
+}
+
+MeshType Model3D::getMeshType() {
+    return this->Type;
 }
 
 std::vector<GLfloat>* Model3D::getMesh() {

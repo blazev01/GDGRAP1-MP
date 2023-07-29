@@ -7,6 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "../Renderer/VFShaders.hpp"
+#include "Enum/MeshType.hpp"
+
 #include "Camera.hpp"
 #include "Light.hpp"
 #include "Light/DirLight.hpp"
@@ -18,6 +20,7 @@ namespace models {
     class Model3D {
     private:
         std::string name;
+        MeshType Type;
         std::vector<GLfloat>* mesh;
         glm::mat4 transformation;
         VFShaders* Shaders;
@@ -27,6 +30,7 @@ namespace models {
     public:
         Model3D(
             std::string name,
+            MeshType Type,
             std::vector<GLfloat>* mesh,
             VFShaders* Shaders,
             GLuint* texture = NULL,
@@ -50,6 +54,7 @@ namespace models {
     public:
         void setPosition(glm::vec3 position);
 
+        MeshType getMeshType();
         std::vector<GLfloat>* getMesh();
         glm::mat4 getTransformation();
     };

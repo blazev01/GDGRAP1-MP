@@ -1,5 +1,248 @@
 #include "Game.hpp"
 
+
+bool spaceToggled = false;
+
+bool LMB = false;
+bool LMBPressed = false;
+
+int activeCam = 0;
+
+float thetaSpeed = 1.0f;
+float moveSpeed = 0.1f;
+float lightSpeed = 0.01f;
+float tiltSpeed = 0.0002;
+
+float yaw = 0.0f;
+float pitch = 0.0f;
+float roll = 0.0f;
+
+float rV = 0.0f;
+float gV = 0.0f;
+float bV = 0.0f;
+
+float xV = 0.0f;
+float yV = 0.0f;
+float zV = 0.0f;
+
+float pIntensity = 0.0f;
+float dIntensity = 0.0f;
+
+double lastX = 0;
+double lastY = 0;
+
+double clickX = 0;
+double clickY = 0;
+
+float xTilt = 0.0f;
+float yTilt = 0.0f;
+
+void keyCallback(
+    GLFWwindow* window,
+    int key,
+    int scancode,
+    int action,
+    int mod
+)
+{
+    if (key == GLFW_KEY_W &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        zV = moveSpeed;
+    }
+    else if (key == GLFW_KEY_S &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        zV = -moveSpeed;
+    }
+    else if ((key == GLFW_KEY_W ||
+        key == GLFW_KEY_S) &&
+        action == GLFW_RELEASE) {
+        zV = 0.0f;
+    }
+
+    if (key == GLFW_KEY_D &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        xV = moveSpeed;
+    }
+    else if (key == GLFW_KEY_A &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        xV = -moveSpeed;
+    }
+    else if ((key == GLFW_KEY_D ||
+        key == GLFW_KEY_A) &&
+        action == GLFW_RELEASE) {
+        xV = 0.0f;
+    }
+
+    if (key == GLFW_KEY_Q &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        yV = moveSpeed;
+    }
+    else if (key == GLFW_KEY_E &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        yV = -moveSpeed;
+    }
+    else if ((key == GLFW_KEY_Q ||
+        key == GLFW_KEY_E) &&
+        action == GLFW_RELEASE) {
+        yV = 0.0f;
+    }
+
+    if (key == GLFW_KEY_I &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        if (spaceToggled) rV = -lightSpeed;
+        else yaw = -thetaSpeed;
+    }
+    else if (key == GLFW_KEY_K &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        if (spaceToggled) rV = lightSpeed;
+        else yaw = thetaSpeed;
+    }
+    else if ((key == GLFW_KEY_I ||
+        key == GLFW_KEY_K) &&
+        action == GLFW_RELEASE) {
+        if (spaceToggled)  rV = 0.0f;
+        else yaw = 0.0f;
+    }
+
+    if (key == GLFW_KEY_L &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        if (spaceToggled) gV = lightSpeed;
+        else pitch = thetaSpeed;
+    }
+    else if (key == GLFW_KEY_J &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        if (spaceToggled) gV = -lightSpeed;
+        else pitch = -thetaSpeed;
+    }
+    else if ((key == GLFW_KEY_L ||
+        key == GLFW_KEY_J) &&
+        action == GLFW_RELEASE) {
+        if (spaceToggled)  gV = 0.0f;
+        else pitch = 0.0f;
+    }
+
+    if (key == GLFW_KEY_U &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        if (spaceToggled) bV = lightSpeed;
+        else roll = thetaSpeed;
+    }
+    else if (key == GLFW_KEY_O &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        if (spaceToggled) bV = -lightSpeed;
+        else roll = -thetaSpeed;
+    }
+    else if ((key == GLFW_KEY_U ||
+        key == GLFW_KEY_O) &&
+        action == GLFW_RELEASE) {
+        if (spaceToggled)  bV = 0.0f;
+        else roll = 0.0f;
+    }
+
+    if (key == GLFW_KEY_UP &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        if (spaceToggled) pIntensity = lightSpeed;
+
+    }
+    else if (key == GLFW_KEY_DOWN &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        if (spaceToggled) pIntensity = -lightSpeed;
+    }
+    else if ((key == GLFW_KEY_UP ||
+        key == GLFW_KEY_DOWN) &&
+        action == GLFW_RELEASE) {
+        pIntensity = 0.0f;
+    }
+
+    if (key == GLFW_KEY_RIGHT &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        if (spaceToggled) dIntensity = lightSpeed;
+    }
+    else if (key == GLFW_KEY_LEFT &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        if (spaceToggled) dIntensity = -lightSpeed;
+    }
+    else if ((key == GLFW_KEY_RIGHT ||
+        key == GLFW_KEY_LEFT) &&
+        action == GLFW_RELEASE) {
+        dIntensity = 0.0f;
+    }
+
+    if (key == GLFW_KEY_SPACE &&
+        action == GLFW_RELEASE) {
+        spaceToggled = !spaceToggled;
+    }
+
+    if (key == GLFW_KEY_1 &&
+        action == GLFW_RELEASE) {
+        activeCam = 0;
+    }
+
+    if (key == GLFW_KEY_2 &&
+        action == GLFW_RELEASE) {
+        activeCam = 1;
+    }
+
+}
+
+void cursorPosCallback(
+    GLFWwindow* window,
+    double xPos,
+    double yPos
+)
+{
+    if (LMBPressed) {
+        clickX = xPos;
+        clickY = yPos;
+        LMBPressed = false;
+    }
+
+    if (LMB && xPos != clickX) {
+        yTilt = (xPos - clickX) * tiltSpeed;
+    }
+
+    if (LMB && yPos != clickY) {
+        xTilt = (yPos - clickY) * tiltSpeed;
+    }
+}
+
+void mouseButtonCallback(
+    GLFWwindow* window,
+    int button,
+    int action,
+    int mods
+)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        LMBPressed = true;
+        LMB = true;
+    }
+    else if (action == GLFW_RELEASE) {
+        LMB = false;
+        xTilt = 0.0f;
+        yTilt = 0.0f;
+    }
+
+}
+
+
 using namespace controllers;
 
 Game::Game() {
@@ -22,7 +265,11 @@ Game::Game() {
 
     glEnable(GL_DEPTH_TEST);
 
-    //glfwSetKeyCallback(window, Key_Callback);
+
+    glfwSetKeyCallback(this->window, keyCallback);
+    glfwSetCursorPosCallback(this->window, cursorPosCallback);
+    glfwSetMouseButtonCallback(this->window, mouseButtonCallback);
+
 
     this->createSkybox();
     this->createShaders();
@@ -44,8 +291,17 @@ void Game::run() {
         glfwSwapBuffers(this->window);
     }
 
-    for (VAO* p : this->VAOs) { p->deleteVertexArray(); }
-    for (VBO* p : this->VBOs) { p->deleteVertexBuffer(); }
+    for (Model3D* p : this->Entities) {
+        if (this->VAOs[p->getMeshType()] != NULL) {
+            this->VAOs[p->getMeshType()]->deleteVertexArray();
+            delete this->VAOs[p->getMeshType()];
+        }
+
+        if (this->VBOs[p->getMeshType()] != NULL) {
+            this->VBOs[p->getMeshType()]->deleteVertexBuffer();
+            delete this->VBOs[p->getMeshType()];
+        }
+    }
 
     this->SkyVAO->deleteVertexArray();
     this->SkyVBO->deleteVertexBuffer();
@@ -56,7 +312,7 @@ void Game::run() {
 
 void Game::update() {
     /*Update Game Objects Here*/
-
+    this->ActiveCam->move(zV, xV, yV);
 
 }
 
@@ -76,7 +332,7 @@ void Game::render() {
     //object render
     for (int i = 0; i < this->Entities.size(); i++) {
         this->Entities[i]->draw(this->ActiveCam, this->Lights);
-        this->VAOs[i]->bind();
+        this->VAOs[this->Entities[i]->getMeshType()]->bind();
         glDrawArrays(GL_TRIANGLES, 0, (*this->Entities[i]->getMesh()).size() / 14);
     }
 }
@@ -183,20 +439,25 @@ void Game::createNormals() {
 }
 
 void Game::createBuffers() {
+    MeshType types[]{
+        MeshType::MODEL_01,
+        MeshType::MODEL_02
+    };
+
     int dimensions[]{ 3,3,2,3,3 };
 
     for (int i = 0; i < this->meshes.size(); i++) {
-        this->VAOs.push_back(new VAO);
-        this->VBOs.push_back(new VBO);
+        this->VAOs[types[i]] = new VAO;
+        this->VBOs[types[i]] = new VBO;
 
-        this->VAOs[i]->bind();
-        this->VBOs[i]->bind();
+        this->VAOs[types[i]]->bind();
+        this->VBOs[types[i]]->bind();
 
-        this->VBOs[i]->bufferData(*this->meshes[i]);
-        this->VAOs[i]->createPointers(dimensions, 5);
+        this->VBOs[types[i]]->bufferData(*this->meshes[i]);
+        this->VAOs[types[i]]->createPointers(dimensions, 5);
 
-        this->VBOs[i]->unbind();
-        this->VAOs[i]->unbind();
+        this->VBOs[types[i]]->unbind();
+        this->VAOs[types[i]]->unbind();
         std::cout << "Buffers created." << std::endl;
     }
 }
@@ -208,10 +469,16 @@ void Game::createObjects() {
         //, "Cat Lamp"
     };
 
+    MeshType types[]{
+        MeshType::MODEL_01,
+        MeshType::MODEL_02
+    };
+
     std::vector<Model3D*> Entities;
     for (int i = 0; i < sizeof(entityNames) / sizeof(std::string); i++) {
         this->Entities.push_back(new Model3D(
             entityNames[i],
+            types[i],
             this->meshes[i],
             this->BaseShaders,
             this->textures[i],

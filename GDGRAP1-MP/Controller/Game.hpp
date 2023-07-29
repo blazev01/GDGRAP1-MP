@@ -1,12 +1,16 @@
 #ifndef CONTROLLERS_GAME_HPP
 #define CONTROLLERS_GAME_HPP
 
+#include <unordered_map>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
 
 #include "../Config/Settings.hpp"
+
+#include "../Model/Enum/MeshType.hpp"
 
 #include "Manager/MeshManager.hpp"
 #include "Manager/TextureManager.hpp"
@@ -45,8 +49,8 @@ namespace controllers {
         std::vector<GLuint*> textures;
         std::vector<GLuint*> normals;
 
-        std::vector<VAO*> VAOs;
-        std::vector<VBO*> VBOs;
+        std::unordered_map<MeshType, VAO*> VAOs;
+        std::unordered_map<MeshType, VBO*> VBOs;
 
         std::vector<Camera*> Cameras;
         Camera* ActiveCam;

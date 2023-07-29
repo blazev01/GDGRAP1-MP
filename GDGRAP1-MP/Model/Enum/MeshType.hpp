@@ -3,7 +3,17 @@
 
 enum MeshType {
 	NONE = -1,
-	PLANE
+	PLANE,
+	MODEL_01,
+	MODEL_02,
+	MODEL_03,
+	MODEL_04,
+	MODEL_05,
+	MODEL_06,
+	MODEL_07,
+	MODEL_08,
+	MODEL_09,
+	MODEL_10
 };
 
 #endif
