@@ -186,6 +186,8 @@ void keyCallback(
     if (key == GLFW_KEY_SPACE &&
         action == GLFW_RELEASE) {
         spaceToggled = !spaceToggled;
+        if (spaceToggled) std::cout << "true" << std::endl;
+        else std::cout << "false" << std::endl;
     }
 
     if (key == GLFW_KEY_1 &&
@@ -312,6 +314,8 @@ void Game::run() {
 
 void Game::update() {
     /*Update Game Objects Here*/
+    this->ActiveCam = this->Cameras[activeCam];
+
     this->ActiveCam->move(zV, xV, yV);
 
 }
@@ -490,6 +494,20 @@ void Game::createObjects() {
 
     //Elf Girl source: https://sketchfab.com/3d-models/elf-girl-52f2e84961b94760b7805c178890d644
     //Cat Lamp source: https://sketchfab.com/3d-models/uwu-cat-night-light-9c9767328ec54bf29c39765671e1033f
+    //tank source: https://free3d.com/3d-model/tank-low-poly-712984.html
+
+
+    /*
+    glm::vec3 FPovPos = glm::vec3(xV, yV, zV);
+    glm::vec3 FPovCenter = FPovPos;
+
+    PerspectiveCamera FirstPov(FPovPos, FPovCenter, 45.0f);
+
+    glm::vec3 TPovPos = glm::vec3(xV, 0, 1.0f);
+
+    PerspectiveCamera ThirdPov(TPovPos, FPovCenter, 45.0f);
+    */
+
 
     //Camera creation
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, 1.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
