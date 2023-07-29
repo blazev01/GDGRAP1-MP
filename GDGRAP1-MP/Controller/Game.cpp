@@ -192,12 +192,14 @@ void keyCallback(
 
     if (key == GLFW_KEY_1 &&
         action == GLFW_RELEASE) {
-        activeCam = 0;
+        if (activeCam == 0 || activeCam == 2) activeCam = 1;
+        else if (activeCam == 1 || activeCam == 2) activeCam = 0;
     }
 
     if (key == GLFW_KEY_2 &&
         action == GLFW_RELEASE) {
-        activeCam = 1;
+        if (activeCam == 0 || activeCam == 1) activeCam = 2;
+        else if (activeCam == 2) activeCam = 0;
     }
 
 }
@@ -508,10 +510,11 @@ void Game::createObjects() {
     PerspectiveCamera ThirdPov(TPovPos, FPovCenter, 45.0f);
     */
 
-
+    //this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, 1.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
     //Camera creation
-    this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, 1.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
-    this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, 1.0f, 5.0f)));
+    this->Cameras.push_back(new PerspectiveCamera(glm::vec3(xV, yV + 2.0f, zV - 5.0f), glm::vec3(0.0f, 1.0f, 0.0f)));//0, 3rd pov
+    this->Cameras.push_back(new PerspectiveCamera(glm::vec3(xV, yV, zV + 1.0f), glm::vec3(0.0f, 1.0f, 0.0f)));//1, 1st pov
+    this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, yV + 25.0f, 1.0f)));//2, top down
     //Setting Active Camera
     this->ActiveCam = this->Cameras[0];
 
