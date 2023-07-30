@@ -6,17 +6,17 @@
 namespace models {
 	class Camera {
     protected:
-        glm::vec3 position;
-        glm::vec3 center;
-        glm::vec3 worldUp;
+        glm::vec3 position;         // Camera Position
+        glm::vec3 center;           // Camera Center (Point of Interest)
+        glm::vec3 worldUp;          // World's orientation
 
-        glm::vec3 F;
-        glm::vec3 R;
-        glm::vec3 U;
+        glm::vec3 F;                // Forward Direction
+        glm::vec3 R;                // Right Direction
+        glm::vec3 U;                // Up Direction
 
-        glm::mat4 orientation;
-        glm::mat4 view;
-        glm::mat4 projection;
+        glm::mat4 orientation;      // Camera Orientation
+        glm::mat4 view;             // Camera View Matrix
+        glm::mat4 projection;       // Camera Projection Matrix
 
     public:
         Camera(glm::vec3 position, glm::vec3 center);

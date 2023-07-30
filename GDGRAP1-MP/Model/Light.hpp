@@ -8,18 +8,18 @@
 namespace models {
 	class Light {
     protected:
-        std::string type;
+        std::string type;       // Type of Light (Point, Direction, etc.)
 
-        glm::vec3 position;
+        glm::vec3 position;     // Light Position
 
-        glm::vec3 diffuseCol;
-        glm::vec3 ambientCol;
-        glm::vec3 specularCol;
+        glm::vec3 diffuseCol;   // Diffuse Color
+        glm::vec3 ambientCol;   // Ambient Color
+        glm::vec3 specularCol;  // Specular Color
 
-        float ambientStr;
-        float specularStr;
+        float ambientStr;       // Ambient Strength
+        float specularStr;      // Specular Strength
 
-        float shininess;
+        float shininess;        // Light Shininess
 
     public:
         Light(glm::vec3 position, std::string type = "DLight");

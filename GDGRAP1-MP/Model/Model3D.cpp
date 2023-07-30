@@ -2,6 +2,15 @@
 
 using namespace models;
 
+// @brief Main constructor of the Model3D class.
+// @param name - Name of the 3D model
+// @param Type - Enum variable denoting the type of mesh the model has
+// @param mesh - Pointer to a vector representing the mesh data of the model
+// @param Shaders - Pointer to the VFShaders class representing the shaders used for the model
+// @param texture - Pointer to the texture ID for the model's texture
+// @param normalMap - Pointer to the texture ID for the model's normal map
+// @param scale - Initial scale factor (size) of the model
+// @param position - Initial position of the model in 3D space
 Model3D::Model3D(
     std::string name,
     MeshType Type,
@@ -22,6 +31,9 @@ Model3D::Model3D(
     this->scale(scale);
 }
 
+// @brief Draws/Renders the 3D models with appropriate textures, shading, and lighting.
+// @param Cam - Pointer to the Camera representing the view of the scene
+// @param Lights - Vector of pointers to Light representing the lighting in the scene
 void Model3D::draw(Camera* Cam, std::vector<Light*> Lights) {
     this->Shaders->setMat4("transform", this->transformation);
     this->Shaders->setMat4("view", Cam->getView());
@@ -35,6 +47,9 @@ void Model3D::draw(Camera* Cam, std::vector<Light*> Lights) {
     this->Shaders->setTexture("normTex", this->normalMap, GL_TEXTURE1, GL_TEXTURE_2D, 1);
 }
 
+// @brief Manages the lighting of models with respect to the camera position.
+// @param Cam - Pointer to the Camera representing the view of the scene
+// @param Lit - Pointer to the Light representing the light used for shading
 void Model3D::drawLight(Camera* Cam, Light* Lit) {
     std::string lightPos = Lit->getType() + ".position";
 
@@ -71,6 +86,8 @@ void Model3D::drawLight(Camera* Cam, Light* Lit) {
     }
 }
 
+// @brief Handles the transformation of the model via vector.
+// @param translation - A vector containing the offset values for the model's position
 void Model3D::translate(glm::vec3 translation) {
     this->transformation = glm::translate(
         this->transformation,
@@ -78,10 +95,16 @@ void Model3D::translate(glm::vec3 translation) {
     );
 }
 
+// @brief Handles the translation of the model via float values.
+// @param x - X component of the offset value
+// @param y - Y component of the offset value
+// @param z - Z component of the offset value
 void Model3D::translate(float x, float y, float z) {
     this->translate(glm::vec3(x, y, z));
 }
 
+// @brief Handles the scale transformation of the model via vector.
+// @param escalation - Vector containing the value for scaling the model's size
 void Model3D::scale(glm::vec3 escalation) {
     this->transformation = glm::scale(
         this->transformation,
@@ -89,14 +112,23 @@ void Model3D::scale(glm::vec3 escalation) {
     );
 }
 
+// @brief Handles the scale transformation of the model via different float values.
+// @param x - X component of the scale value
+// @param y - Y component of the scale value
+// @param z - Z component of the scale value
 void Model3D::scale(float x, float y, float z) {
     this->scale(glm::vec3(x, y, z));
 }
 
+// @brief Handles the scale transformation of the model via a single float value to be added to all axes.
+// @param scalar - Acts as both X, Y, and Z components of the scale value
 void Model3D::scale(float scalar) {
     this->scale(glm::vec3(scalar, scalar, scalar));
 }
 
+// @brief Rotates the model at a given angle around a specified axis.
+// @param theta - The angle (in radians) by which to tilt the model
+// @param axis - Axis of rotation where the model rotates around
 void Model3D::rotate(float theta, glm::vec3 axis) {
     this->transformation = glm::rotate(
         this->transformation,
@@ -105,22 +137,32 @@ void Model3D::rotate(float theta, glm::vec3 axis) {
     );
 }
 
+// @brief Rotates the model by a given angle around a specified axis, but provided as individual x, y, and z components.
+// @param theta - The angle (in radians) by which to tilt the model
+// @param x - X component of the axis of rotation
+// @param y - Y component of the axis of rotation
+// @param z - Z component of the axis of rotation
 void Model3D::rotate(float theta, float x, float y, float z) {
     this->rotate(theta, glm::vec3(x, y, z));
 }
 
+// @brief Sets the model's current position to a given value.
+// @param position - The model's new position
 void Model3D::setPosition(glm::vec3 position) {
     this->transformation = glm::translate(glm::mat4(this->transformation[1][1]), position);
 }
 
+// @brief Returns the model's mesh type.
 MeshType Model3D::getMeshType() {
     return this->Type;
 }
 
+// @brief Returns the model's mesh
 std::vector<GLfloat>* Model3D::getMesh() {
     return this->mesh;
 }
 
+// @brief Returns the model's transformation matrix
 glm::mat4 Model3D::getTransformation() {
     return this->transformation;
 }
