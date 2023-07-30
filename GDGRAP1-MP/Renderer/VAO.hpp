@@ -6,7 +6,7 @@
 namespace renderers {
 	class VAO {
     private:
-        GLuint vertexArray;
+        GLuint vertexArray;     // Main VAO variable
 
     public:
         VAO();

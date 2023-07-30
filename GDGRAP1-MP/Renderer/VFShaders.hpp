@@ -19,10 +19,8 @@ namespace renderers {
 
     public:
         void setFloat(const GLchar* varName, float f);
-
         void setVec3(const GLchar* varName, glm::vec3 v3);
         void setMat4(const GLchar* varName, glm::mat4 m4);
-
         void setTexture(const GLchar* varName, GLuint* texture, GLenum active, GLenum type, GLint unit);
 
     private:

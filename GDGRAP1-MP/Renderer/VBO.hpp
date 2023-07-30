@@ -8,7 +8,7 @@
 namespace renderers {
     class VBO {
     private:
-        GLuint vertexBuffer;
+        GLuint vertexBuffer;    // Main VBO variable
 
     public:
         VBO();

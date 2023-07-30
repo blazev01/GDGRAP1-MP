@@ -8,7 +8,7 @@
 namespace renderers {
     class EBO {
     private:
-        GLuint elementBuffer;
+        GLuint elementBuffer;   // Main EBO variable
 
     public:
         EBO();
