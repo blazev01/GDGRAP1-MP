@@ -477,7 +477,9 @@ void Game::createShaders() {
 
 void Game::createMeshes() {
     std::string meshPaths[]{
-        "3D/Elf01_posed/Elf01_posed.obj"
+        "3D/Elf01_posed/Elf01_posed.obj",
+        //"3D/board/board.obj"
+        //"3D/Watermelon/watermelon.obj"
         //, "3D/Cat Lamp/Cat Lamp.obj"
     };
 
@@ -505,7 +507,8 @@ void Game::createTextures() {
 
 void Game::createNormals() {
     std::string normalPaths[]{
-        "3D/brickwall_normal.jpg"
+        "3D/brickwall_normal.jpg",
+        //"3D/Watermelon/watermelon.jpg"
         //, "3D/Cat Lamp/Cat_Lamp_Normal.tga.png"
     };
 
@@ -547,13 +550,15 @@ void Game::createBuffers() {
 void Game::createObjects() {
     //Entity creation
     std::string entityNames[]{
-        "Elf Girl"
+        "Elf Girl",
         //, "Cat Lamp"
+        //"Board"
     };
 
     MeshType types[]{
         MeshType::MODEL_01,
-        MeshType::MODEL_02
+        MeshType::MODEL_02,
+        //MeshType::MODEL_03
     };
 
     std::vector<Model3D*> Entities;
