@@ -6,10 +6,15 @@ using namespace models;
 // @param position - The position of the player
 // @param forward - Initial forward direction of the player
 Player::Player(glm::vec3 position, glm::vec3 forward) {
-	this->F = glm::normalize(glm::vec3(forward - position));
+	this->position = position;
+	this->worldUp = glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f));
+	this->F = glm::normalize(forward);
+	this->orientation = this->calcOrientation();
 
 	this->isOrbitingRight = false;
 	this->isOrbitingLeft = false;
+	this->isOrbitingUp = false;
+	this->isOrbitingDown = false;
 	this->isLookingRight = false;
 	this->isLookingLeft = false;
 	this->isLookingUp = false;
@@ -31,6 +36,15 @@ void Player::circle(Camera* Cam) {
 		this->isOrbitingLeft = false;
 		Cam->orbit(-this->orbitSpeed, 0.0f, 1.0f, 0.0f);
 	}
+	if (this->isOrbitingUp) {
+		this->isOrbitingUp = false;
+		Cam->orbit(this->orbitSpeed, 1.0f, 0.0f, 0.0f);
+	}
+	else if (this->isOrbitingDown) {
+		this->isOrbitingDown = false;
+		Cam->orbit(-this->orbitSpeed, 1.0f, 0.0f, 0.0f);
+	}
+
 }
 
 // @brief Tilts the camera to where the player is looking at.
@@ -60,57 +74,72 @@ void Player::look(Camera* Cam) {
 void Player::turn(Model3D* Model) {
 	if (this->isTurningRight) {
 		this->isTurningRight = false;
-		Model->rotate(this->turnSpeed, 0.0f, 1.0f, 0.0f);
-		this->calcForward(this->turnSpeed);
-
+		Model->rotate(-this->turnSpeed, 0.0f, 1.0f, 0.0f);
+		this->reorient(this->turnSpeed * 0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 	else if (this->isTurningLeft) {
 		this->isTurningLeft = false;
-		Model->rotate(-this->turnSpeed, 0.0f, 1.0f, 0.0f);
-		this->calcForward(-this->turnSpeed);
+		Model->rotate(this->turnSpeed, 0.0f, 1.0f, 0.0f);
+		this->reorient(-this->turnSpeed * 0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 }
 
 // @brief Translates the model forward/backward should the player move.
 // @param Model - Pointer to the Model3D class, pertains to the player's model on the application
-void Player::move(Model3D* Model) {
+void Player::move(Model3D* Model, Camera* Cam) {
 	if (this->isMovingForward) {
 		this->isMovingForward = false;
-		glm::vec3 velocity = this->F * this->moveSpeed;
+		glm::vec3 velocity = this->F * -this->moveSpeed;
 		Model->translate(velocity);
+		Cam->translate(velocity);
 	}
 	else if (this->isMovingBackward) {
 		this->isMovingBackward = false;
-		glm::vec3 velocity = this->F * -this->moveSpeed;
+		glm::vec3 velocity = this->F * this->moveSpeed;
 		Model->translate(velocity);
+		Cam->translate(velocity);
 	}
 }
 
 // @brief Calculates the new forward direction of the player camera after turning at a given angle.
 // @param theta - The angle (in radians) by which the camera had tilted
-void Player::calcForward(float theta) {
-	glm::vec3 U = glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::vec3 R = glm::normalize(glm::cross(F, U));
+glm::mat4 Player::calcOrientation() {
+	this->R = glm::normalize(glm::cross(this->F, this->worldUp));
+	this->U = glm::normalize(glm::cross(this->R, this->F));
 
 	glm::mat4 orientation = glm::mat4(1.0f);
 
-	orientation[0][0] = R.x;
-	orientation[1][0] = R.y;
-	orientation[2][0] = R.z;
+	orientation[0][0] = this->R.x;
+	orientation[1][0] = this->R.y;
+	orientation[2][0] = this->R.z;
 
-	orientation[0][1] = U.x;
-	orientation[1][1] = U.y;
-	orientation[2][1] = U.z;
+	orientation[0][1] = this->U.x;
+	orientation[1][1] = this->U.y;
+	orientation[2][1] = this->U.z;
 
 	orientation[0][2] = -this->F.x;
 	orientation[1][2] = -this->F.y;
 	orientation[2][2] = -this->F.z;
 
-	orientation = glm::rotate(orientation, theta, U);
+	return orientation;
+}
 
-	this->F.x = -orientation[0][2];
-	this->F.y = -orientation[1][2];
-	this->F.z = -orientation[2][2];
+void Player::reorient(float theta, glm::vec3 axis) {
+	if (axis.x) this->orientation = glm::rotate(this->orientation, theta, this->R);
+	if (axis.y) this->orientation = glm::rotate(this->orientation, theta, this->U);
+	if (axis.z) this->orientation = glm::rotate(this->orientation, theta, this->F);
+
+	this->R.x = this->orientation[0][0];
+	this->R.y = this->orientation[1][0];
+	this->R.z = this->orientation[2][0];
+
+	this->U.x = this->orientation[0][1];
+	this->U.y = this->orientation[1][1];
+	this->U.z = this->orientation[2][1];
+
+	this->F.x = -this->orientation[0][2];
+	this->F.y = -this->orientation[1][2];
+	this->F.z = -this->orientation[2][2];
 }
 
 // @brief Gets the boolean value as to whether or not the player is orbiting right.

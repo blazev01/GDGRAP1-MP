@@ -25,6 +25,7 @@ namespace models {
         void translate(glm::vec3 position);
         void translate(float x, float y, float z);
         void move(float f, float r, float u);
+        void moveWith(float f, float r, float u, glm::mat4 orientation);
         void tilt(float theta, glm::vec3 axis);
         void tilt(float theta, float x, float y, float z);
         void orbit(float theta, glm::vec3 axis);
