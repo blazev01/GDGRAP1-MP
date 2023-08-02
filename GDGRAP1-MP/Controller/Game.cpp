@@ -589,7 +589,7 @@ void Game::createObjects() {
     //this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, 1.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
     //Camera creation
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(xV, yV + 2.0f, zV - 6.0f), glm::vec3(0.0f, 1.0f, 0.0f)));//0, 3rd pov
-    this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, 0.0f, zV + 1.0f), glm::vec3(0.0f, 1.0f, 0.0f)));//1, 1st pov
+    this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, 0.0f, zV - 5.0f), glm::vec3(-1.0f, 1.0f, 0.0f)));//1, 1st pov
     this->Cameras.push_back(new OrthoCamera(orthoPos));//2, top down
     //this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, yV + 25.0f, 1.0f))); original
     //Setting Active Camera
