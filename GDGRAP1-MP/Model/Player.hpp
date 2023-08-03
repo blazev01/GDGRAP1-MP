@@ -18,6 +18,8 @@ namespace models {
 		const float turnSpeedOffset = 0.00001f;
 		const float camTurnOffset = 0.017454f;
 
+		const float fpCamHeight = 1.5f;
+
 		glm::vec3 position;
 		glm::vec3 worldUp;
 
