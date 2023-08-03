@@ -323,7 +323,7 @@ void Game::update() {
         break;
     }
     
-    switch (currentIntensity) {
+    switch (currentIntensity) {//toggles light intensity
     case 1:
         this->Lights[0]->setAmbientStr(0.1f);
         this->Lights[0]->setSpecularStr(2.0f);
@@ -433,7 +433,8 @@ void Game::createMeshes() {
 
 void Game::createTextures() {
     std::string texPaths[]{
-        "3D/brickwall.jpg",
+        "3D/panzer_tank/hull.jpg",
+        //"3D/brickwall.jpg",
         "3D/SnowTerrain/SnowTerrain.jpg"
         //"3D/Grass_Terrain/Grass_Terrain.jpg"
         //, "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
