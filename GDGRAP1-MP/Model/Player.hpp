@@ -15,19 +15,21 @@ namespace models {
 	class Player {
 	private:
 		const float orbitSpeed = 0.05f;
-		const float lookSpeed = 0.05f;
+		const float lookSpeed = 0.01f;
 		const float panSpeed = 0.5f;
-		const float zoomSpeed = 1.0f;
+		const float zoomSpeed = 0.5f;
 		const float turnSpeed = 2.0f;
 		const float moveSpeed = 0.05f;
 
 		const float turnSpeedOffset = 0.00001f;
 		const float camTurnOffset = 0.017454f;
+		const float defaultFOV = 45.0f;
 
-		const float fpCamHeight = 1.5f;
+		float fpCamHeight;
 
 		glm::vec3 position;
 		glm::vec3 worldUp;
+		glm::vec3 lastCamCenter;
 
 		glm::vec3 F;
 		glm::vec3 R;
@@ -62,7 +64,7 @@ namespace models {
 		Player(glm::vec3 position, glm::vec3 forward, ViewTag CurrentView);
 
 	public:
-		void swapView();
+		void swapView(PerspectiveCamera* Cam);
 		void circle(Camera* Cam);
 		void look(Camera* Cam);
 		void pan(Camera* Cam);

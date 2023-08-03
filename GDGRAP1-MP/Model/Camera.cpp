@@ -72,6 +72,30 @@ void Camera::movePositionWithCenter(glm::vec3 center) {
     this->view = this->calcView();
 }
 
+void Camera::swivel(float theta, glm::vec3 axis) {
+    this->orientation = glm::rotate(this->orientation, theta, glm::normalize(axis));
+
+    this->R.x = this->orientation[0][0];
+    this->R.y = this->orientation[1][0];
+    this->R.z = this->orientation[2][0];
+
+    this->U.x = this->orientation[0][1];
+    this->U.y = this->orientation[1][1];
+    this->U.z = this->orientation[2][1];
+
+    this->F.x = -this->orientation[0][2];
+    this->F.y = -this->orientation[1][2];
+    this->F.z = -this->orientation[2][2];
+
+    this->center = glm::vec3(this->F + this->position);
+
+    this->view = this->calcView();
+}
+
+void Camera::swivel(float theta, float x, float y, float z) {
+    this->swivel(theta, glm::vec3(x, y, z));
+}
+
 // @brief Tilts the camera at a given angle around a specified axis.
 // @param theta - The angle (in radians) by which to tilt the camera
 // @param axis - Axis of rotation where the camera rotates around
@@ -111,7 +135,7 @@ void Camera::tilt(float theta, float x, float y, float z) {
 // @param axis - Axis of rotation where the camera will rotate around
 void Camera::orbit(float theta, glm::vec3 axis) {
     glm::vec3 revF = glm::normalize(glm::vec3(this->position - this->center));
-    glm::vec3 revR = glm::normalize(glm::cross(F, this->worldUp));
+    glm::vec3 revR = glm::normalize(glm::cross(this->F, this->worldUp));
     glm::vec3 revU = glm::normalize(this->worldUp);
 
     glm::mat4 orientation = glm::mat4(1.0f);

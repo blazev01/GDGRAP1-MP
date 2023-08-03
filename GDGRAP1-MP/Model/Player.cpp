@@ -5,10 +5,12 @@ using namespace models;
 // @brief The constructor of the Player class.
 // @param position - The position of the player
 // @param forward - Initial forward direction of the player
-Player::Player(glm::vec3 position, glm::vec3 forward, ViewTag CurrentView) {
+Player::Player(glm::vec3 position, glm::vec3 center, ViewTag CurrentView) {
 	this->position = position;
+	this->lastCamCenter = center;
+	this->fpCamHeight = position.y;
 	this->worldUp = glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f));
-	this->F = glm::normalize(forward);
+	this->F = glm::normalize(center - position);
 	this->orientation = this->calcOrientation();
 	this->CurrentView = CurrentView;
 
@@ -34,20 +36,24 @@ Player::Player(glm::vec3 position, glm::vec3 forward, ViewTag CurrentView) {
 	this->isMovingBackward = false;
 }
 
-void Player::swapView() {
+void Player::swapView(PerspectiveCamera* Cam) {
 	if (this->togglePersonView) {
 		this->togglePersonView = false;
 		if (this->CurrentView != ViewTag::THIRD_PERSON) {
 			this->CurrentView = ViewTag::THIRD_PERSON;
+			Cam->setCenter(this->lastCamCenter);
 		}
 		else if (this->CurrentView != ViewTag::FIRST_PERSON) {
 			this->CurrentView = ViewTag::FIRST_PERSON;
+			this->lastCamCenter = Cam->getCenter();
+			Cam->setFOV(this->defaultFOV);
 		}
 	}
 	else if (this->toggleOverhead) {
 		this->toggleOverhead = false;
 		if (this->CurrentView != ViewTag::OVERHEAD) {
 			this->CurrentView = ViewTag::OVERHEAD;
+			Cam->setCenter(this->lastCamCenter);
 		}
 	}
 }
@@ -80,11 +86,11 @@ void Player::circle(Camera* Cam) {
 void Player::look(Camera* Cam) {
 	if (this->isLookingRight) {
 		this->isLookingRight = false;
-		Cam->tilt(this->lookSpeed, 0.0f, 1.0f, 0.0f);
+		Cam->swivel(this->lookSpeed, 0.0f, 1.0f, 0.0f);
 	}
 	else if (this->isLookingLeft) {
 		this->isLookingLeft = false;
-		Cam->tilt(-this->lookSpeed, 0.0f, 1.0f, 0.0f);
+		Cam->swivel(-this->lookSpeed, 0.0f, 1.0f, 0.0f);
 	}
 
 	if (this->isLookingUp) {

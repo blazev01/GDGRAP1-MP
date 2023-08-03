@@ -302,7 +302,7 @@ void Game::processEvents() {
 
 void Game::update() {
     /*Update Game Objects Here*/
-    this->Player1->swapView();
+    this->Player1->swapView((PerspectiveCamera*)this->Cameras[1]);
     CurrentView = this->Player1->getCurrentView();
     this->ActiveCam = this->Cameras[(int)CurrentView];
 
@@ -445,13 +445,10 @@ void Game::createTextures() {
         "3D/SnowTerrain/SnowTerrain.jpg",
         "3D/Watermelon/watermelon.jpg",
         "3D/Rope_Block/rope_block.jpg",
-        "3D/panzer_tank/tracks.jpg",
+        "3D/brickwall.jpg",
         "3D/Planks/texture2.jpg",
         "3D/panzer_tank/turret.jpg",
         "3D/Grass_Terrain/Grass_Terrain.jpg"
-        //"3D/Rock1/Rock.jpg"
-        //"3D/Grass_Terrain/Grass_Terrain.jpg"
-        //, "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
     };
 
     for (int i = 0; i < sizeof(texPaths) / sizeof(std::string); i++) {
@@ -467,10 +464,7 @@ void Game::createTextures() {
 
 void Game::createNormals() {
     std::string normalPaths[]{
-        "3D/brickwall_normal.jpg",
-        //"3D/Watermelon/watermelon.jpg",
-        // "3D/brickwall_normal.jpg
-        //, "3D/Cat Lamp/Cat_Lamp_Normal.tga.png"
+        "3D/brickwall_normal.jpg"
     };
 
     for (int i = 0; i < sizeof(normalPaths) / sizeof(std::string); i++) {
@@ -598,12 +592,8 @@ void Game::createObjects() {
         1.0f
     ));
 
-    //Elf Girl source: https://sketchfab.com/3d-models/elf-girl-52f2e84961b94760b7805c178890d644
-    //Cat Lamp source: https://sketchfab.com/3d-models/uwu-cat-night-light-9c9767328ec54bf29c39765671e1033f
-    //tank source: https://free3d.com/3d-model/tank-low-poly-712984.html
-
     //Camera creation
-    float tankHeight = 1.5f;
+    float tankHeight = 1.6f;
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, tankHeight + 5.0f, -10.0f), glm::vec3(0.0f, tankHeight + 0.0f, 0.0f)));//0, 3rd pov
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, tankHeight, 0.0f), glm::vec3(0.0f, tankHeight, 1.0f)));//1, 1st pov
     this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, 50.0f, -1.0f), glm::vec3(0.0f), 10.0f, 0.1f, 200.0f));//2, top down
@@ -615,7 +605,7 @@ void Game::createObjects() {
     this->Lights.push_back(new PointLight(this->Cameras[1]->getCenter()));
     this->Lights.push_back(new DirLight(glm::vec3(20.0f, 20.0f, 20.0f)));
 
-    Player1 = new Player(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f), CurrentView);
+    Player1 = new Player(this->Cameras[1]->getPosition(), this->Cameras[1]->getCenter(), CurrentView);
 
     //watermelon
     this->Entities[2]->setPosition(glm::vec3(5.0f, 0.8f, 3.0f));
@@ -628,7 +618,6 @@ void Game::createObjects() {
 
     //board
     this->Entities[4]->setPosition(glm::vec3(-8.0f, 0.2f, -10.0f));
-    //this->Entities[4]->rotate(180, -1, 0, 0);
     this->Entities[4]->scale(0.05f, 0.05f, 0.05f);
 
     //planks
