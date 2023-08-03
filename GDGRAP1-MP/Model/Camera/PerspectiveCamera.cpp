@@ -2,11 +2,16 @@
 
 using namespace models;
 
-PerspectiveCamera::PerspectiveCamera(glm::vec3 position, glm::vec3 center, float fov)
+PerspectiveCamera::PerspectiveCamera(
+	glm::vec3 position,
+	glm::vec3 center,
+	float fov,
+	float near,
+	float far)
 	: Camera(position, center) {
 	this->fov = fov;
-	this->near = 0.1f;
-	this->far = 100.0f;
+	this->near = near;
+	this->far = far;
 	this->projection = this->calcProjection();
 }
 

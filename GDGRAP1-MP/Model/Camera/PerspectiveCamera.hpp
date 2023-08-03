@@ -12,7 +12,13 @@ namespace models {
 	    float far;
 	
 	public:
-		PerspectiveCamera(glm::vec3 position, glm::vec3 center = glm::vec3(0.0f), float fov = 45.f);
+		PerspectiveCamera(
+			glm::vec3 position,
+			glm::vec3 center = glm::vec3(0.0f),
+			float fov = 45.f,
+			float near = 0.1f,
+			float fat = 100.0f
+		);
 	
 	private:
 		glm::mat4 calcProjection();
