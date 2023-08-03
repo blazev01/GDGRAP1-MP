@@ -549,4 +549,8 @@ void Game::createObjects() {
     this->Lights.push_back(new DirLight(glm::vec3(20.0f, 20.0f, 20.0f)));
 
     Player1 = new Player(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f), CurrentView);
+
+    //watermelon
+    this->Entities[2]->setPosition(glm::vec3(5.0f, 0.8f, 0.1f));
+    this->Entities[2]->scale(0.1f, 0.1f, 0.1f);
 }
