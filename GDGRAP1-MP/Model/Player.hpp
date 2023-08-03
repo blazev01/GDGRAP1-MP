@@ -7,6 +7,9 @@
 #include "Model3D.hpp"
 #include "Light.hpp"
 
+#include "Enum/ViewTag.hpp"
+
+
 namespace models {
 	class Player {
 	private:
@@ -29,6 +32,10 @@ namespace models {
 
 		glm::mat4 orientation;
 
+		ViewTag CurrentView;
+
+		bool togglePersonView;
+		bool toggleOverhead;
 		bool isOrbitingRight;
 		bool isOrbitingLeft;
 		bool isOrbitingUp;
@@ -37,15 +44,20 @@ namespace models {
 		bool isLookingLeft;
 		bool isLookingUp;
 		bool isLookingDown;
+		bool isPanningRight;
+		bool isPanningLeft;
+		bool isPanningUp;
+		bool isPanningDown;
 		bool isTurningRight;
 		bool isTurningLeft;
 		bool isMovingForward;
 		bool isMovingBackward;
 
 	public:
-		Player(glm::vec3 position, glm::vec3 forward);
+		Player(glm::vec3 position, glm::vec3 forward, ViewTag CurrentView);
 
 	public:
+		void swapView();
 		void circle(Camera* Cam);
 		void look(Camera* Cam);
 		void turn(Model3D* Model, Light* FlashLight, Camera* Cam);
@@ -54,9 +66,16 @@ namespace models {
 	private:
 		glm::mat4 calcOrientation();
 		void reorient(float theta, glm::vec3 axis);
-		void calcLightPos(Model3D* Model, Light* FlashLight);
 		
 	public:
+		ViewTag getCurrentView();
+
+		bool getTogglePersonView();
+		void setTogglePersonView(bool togglePersonView);
+
+		bool getToggleOverhead();
+		void setToggleOverhead(bool toggleOverhead);
+
 		bool getIsOrbitingRight();
 		void setIsOrbitingRight(bool isOrbitingRight);
 

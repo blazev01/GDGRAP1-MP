@@ -1,46 +1,24 @@
 #include "Game.hpp"
 
-bool isOrbitingRight = false;
-bool isOrbitingLeft = false;
-bool isOrbitingUp = false;
-bool isOrbitingDown = false;
-bool isLookingRight = false;
-bool isLookingLeft = false;
-bool isLookingUp = false;
-bool isLookingDown = false;
-bool isTurningRight = false;
-bool isTurningLeft = false;
-bool isMovingForward = false;
-bool isMovingBackward = false;
+bool released1 = false;
+bool released2 = false;
+bool releasedF = false;
 
-int tiltMargin = 64;
+bool draggingLMBRight = false;
+bool draggingLMBLeft = false;
+bool draggingLMBUp = false;
+bool draggingLMBDown = false;
 
-bool spaceToggled = false;
+bool holdingQ = false;
+bool holdingW = false;
+bool holdingE = false;
+bool holdingA = false;
+bool holdingS = false;
+bool holdingD = false;
+
 
 bool LMB = false;
 bool LMBPressed = false;
-
-int activeCam = 0;
-
-float thetaSpeed = 1.0f;
-float moveSpeed = 0.1f;
-float lightSpeed = 0.01f;
-float tiltSpeed = 0.0002;
-
-float yaw = 0.0f;
-float pitch = 0.0f;
-float roll = 0.0f;
-
-float rV = 0.0f;
-float gV = 0.0f;
-float bV = 0.0f;
-
-float xV = 0.0f;
-float yV = 0.0f;
-float zV = 0.0f;
-
-float pIntensity = 0.0f;
-float dIntensity = 0.0f;
 
 double lastX = 0;
 double lastY = 0;
@@ -48,15 +26,10 @@ double lastY = 0;
 double clickX = 0;
 double clickY = 0;
 
-float xTilt = 0.0f;
-float yTilt = 0.0f;
+int dragMargin = 64;
 
-//for ortho cam
-float xOrtho = 0;
-float yOrtho = yV + 100.0f;
-float zOrtho = 1.0f;
+ViewTag CurrentView = ViewTag::THIRD_PERSON;
 
-glm::vec3 orthoPos = glm::vec3(xOrtho, yOrtho, zOrtho);
 
 void keyCallback(
     GLFWwindow* window,
@@ -69,162 +42,77 @@ void keyCallback(
     if (key == GLFW_KEY_W &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        isMovingForward = true;
+        holdingW = true;
     }
-    else if (key == GLFW_KEY_S &&
+    else if (key == GLFW_KEY_W &&
+        action == GLFW_RELEASE) {
+        holdingW = false;
+    }
+
+    if (key == GLFW_KEY_S &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        isMovingBackward = true;
+        holdingS = true;
     }
-    else if ((key == GLFW_KEY_W ||
-        key == GLFW_KEY_S) &&
+    else if (
+        key == GLFW_KEY_S &&
         action == GLFW_RELEASE) {
-        isMovingForward = false;
-        isMovingBackward = false;
+        holdingS = false;
     }
 
     if (key == GLFW_KEY_D &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        isTurningRight = true;
+        holdingD = true;
     }
-    else if (key == GLFW_KEY_A &&
+    else if (key == GLFW_KEY_D &&
+        action == GLFW_RELEASE) {
+        holdingD = false;
+    }
+
+    if (key == GLFW_KEY_A &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        isTurningLeft = true;
+        holdingA = true;
     }
-    else if ((key == GLFW_KEY_D ||
-        key == GLFW_KEY_A) &&
+    else if (key == GLFW_KEY_A &&
         action == GLFW_RELEASE) {
-        isTurningRight = false;
-        isTurningLeft = false;
+        holdingA = false;
     }
 
     if (key == GLFW_KEY_Q &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        yV = moveSpeed;
+        holdingQ = true;
+    }
+    else if (key == GLFW_KEY_Q &&
+        action == GLFW_RELEASE) {
+        holdingQ = false;
+    }
+
+    if (key == GLFW_KEY_E &&
+        action == GLFW_PRESS &&
+        action != GLFW_RELEASE) {
+        holdingE = true;
     }
     else if (key == GLFW_KEY_E &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        yV = -moveSpeed;
-    }
-    else if ((key == GLFW_KEY_Q ||
-        key == GLFW_KEY_E) &&
         action == GLFW_RELEASE) {
-        yV = 0.0f;
+        holdingE = false;
     }
 
-    if (key == GLFW_KEY_I &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) rV = -lightSpeed;
-        else yaw = -thetaSpeed;
-    }
-    else if (key == GLFW_KEY_K &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) rV = lightSpeed;
-        else yaw = thetaSpeed;
-    }
-    else if ((key == GLFW_KEY_I ||
-        key == GLFW_KEY_K) &&
+    if (key == GLFW_KEY_F &&
         action == GLFW_RELEASE) {
-        if (spaceToggled)  rV = 0.0f;
-        else yaw = 0.0f;
-    }
-
-    if (key == GLFW_KEY_L &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) gV = lightSpeed;
-        else pitch = thetaSpeed;
-    }
-    else if (key == GLFW_KEY_J &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) gV = -lightSpeed;
-        else pitch = -thetaSpeed;
-    }
-    else if ((key == GLFW_KEY_L ||
-        key == GLFW_KEY_J) &&
-        action == GLFW_RELEASE) {
-        if (spaceToggled)  gV = 0.0f;
-        else pitch = 0.0f;
-    }
-
-    if (key == GLFW_KEY_U &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) bV = lightSpeed;
-        else roll = thetaSpeed;
-    }
-    else if (key == GLFW_KEY_O &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) bV = -lightSpeed;
-        else roll = -thetaSpeed;
-    }
-    else if ((key == GLFW_KEY_U ||
-        key == GLFW_KEY_O) &&
-        action == GLFW_RELEASE) {
-        if (spaceToggled)  bV = 0.0f;
-        else roll = 0.0f;
-    }
-
-    if (key == GLFW_KEY_UP &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) pIntensity = lightSpeed;
-
-    }
-    else if (key == GLFW_KEY_DOWN &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) pIntensity = -lightSpeed;
-    }
-    else if ((key == GLFW_KEY_UP ||
-        key == GLFW_KEY_DOWN) &&
-        action == GLFW_RELEASE) {
-        pIntensity = 0.0f;
-    }
-
-    if (key == GLFW_KEY_RIGHT &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) dIntensity = lightSpeed;
-    }
-    else if (key == GLFW_KEY_LEFT &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) dIntensity = -lightSpeed;
-    }
-    else if ((key == GLFW_KEY_RIGHT ||
-        key == GLFW_KEY_LEFT) &&
-        action == GLFW_RELEASE) {
-        dIntensity = 0.0f;
-    }
-
-    if (key == GLFW_KEY_SPACE &&
-        action == GLFW_RELEASE) {
-        spaceToggled = !spaceToggled;
-        if (spaceToggled) std::cout << "true" << std::endl;
-        else std::cout << "false" << std::endl;
+        releasedF = true;
     }
 
     if (key == GLFW_KEY_1 &&
         action == GLFW_RELEASE) {
-        if (activeCam == 1 || activeCam == 2) activeCam = 0;
-        else if (activeCam == 0 || activeCam == 2) activeCam = 1;
-        std::cout << "Camera: " << activeCam << std::endl;
+        released1 = true;
     }
 
     if (key == GLFW_KEY_2 &&
         action == GLFW_RELEASE) {
-        if (activeCam == 0 || activeCam == 1) activeCam = 2;
-        else if (activeCam == 2) activeCam = 0;
-        std::cout << "Camera: " << activeCam << std::endl;
+        released2 = true;
     }
 
 }
@@ -236,21 +124,21 @@ void cursorPosCallback(
 )
 {
     if (LMBPressed) {
+        LMBPressed = false;
         clickX = xPos;
         clickY = yPos;
-        LMBPressed = false;
     }
 
     if (LMB && xPos != clickX) {
         double deltaPosX = xPos - clickX;
-        if(deltaPosX > tiltMargin) isOrbitingRight = true;
-        else if (deltaPosX < -tiltMargin) isOrbitingLeft = true;
+        if(deltaPosX > dragMargin) draggingLMBRight = true;
+        else if (deltaPosX < -dragMargin) draggingLMBLeft = true;
     }
 
     if (LMB && yPos != clickY) {
         double deltaPosY = yPos - clickY;
-        if (deltaPosY > tiltMargin) isOrbitingUp = true;
-        else if (deltaPosY < -tiltMargin) isOrbitingDown = true;
+        if (deltaPosY > dragMargin) draggingLMBUp = true;
+        else if (deltaPosY < -dragMargin) draggingLMBDown = true;
     }
 }
 
@@ -261,7 +149,8 @@ void mouseButtonCallback(
     int mods
 )
 {
-    if (button == GLFW_MOUSE_BUTTON_LEFT &&
+    if (CurrentView == ViewTag::THIRD_PERSON &&
+        button == GLFW_MOUSE_BUTTON_LEFT &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
         LMBPressed = true;
@@ -269,10 +158,10 @@ void mouseButtonCallback(
     }
     else if (action == GLFW_RELEASE) {
         LMB = false;
-        isOrbitingRight = false;
-        isOrbitingLeft = false;
-        isOrbitingUp = false;
-        isOrbitingDown = false;
+        draggingLMBRight = false;
+        draggingLMBLeft = false;
+        draggingLMBUp = false;
+        draggingLMBDown = false;
     }
 
 }
@@ -348,61 +237,74 @@ void Game::run() {
 }
 
 void Game::processEvents() {
-    if (isOrbitingRight) {
-        this->Player1->setIsOrbitingRight(true);
+    if (released1) {
+        released1 = false;
+        this->Player1->setTogglePersonView(true);
     }
-    else if (isOrbitingLeft) {
-        this->Player1->setIsOrbitingLeft(true);
-    }
-
-    if (isOrbitingUp) {
-        this->Player1->setIsOrbitingUp(true);
-    }
-    else if (isOrbitingDown) {
-        this->Player1->setIsOrbitingDown(true);
+    else if (released2) {
+        released2 = false;
+        this->Player1->setToggleOverhead(true);
     }
 
-    if (isLookingRight) {
-        isLookingRight = false;
-        this->Player1->setIsLookingRight(true);
-    }
-    else if (isLookingLeft) {
-        isLookingLeft = false;
-        this->Player1->setIsLookingLeft(true);
-    }
+    if (draggingLMBRight) this->Player1->setIsOrbitingRight(true);
+    else if (draggingLMBLeft) this->Player1->setIsOrbitingLeft(true);
 
-    if (isLookingUp) {
-        isLookingUp = false;
-        this->Player1->setIsLookingUp(true);
-    }
-    else if (isLookingDown) {
-        isLookingDown = false;
-        this->Player1->setIsLookingDown(true);
-    }
+    if (draggingLMBUp) this->Player1->setIsOrbitingUp(true);
+    else if (draggingLMBDown) this->Player1->setIsOrbitingDown(true);
 
-    if (isTurningRight) {
-        this->Player1->setIsTurningRight(true);
-    }
-    else if (isTurningLeft) {
-        this->Player1->setIsTurningLeft(true);
-    }
 
-    if (isMovingForward) {
-        this->Player1->setIsMovingForward(true);
-    }
-    else if (isMovingBackward) {
-        this->Player1->setIsMovingBackward(true);
-    }
+    switch (CurrentView) {
+    case ViewTag::THIRD_PERSON:
+        if (holdingW) this->Player1->setIsMovingForward(true);
+        else if (holdingS) this->Player1->setIsMovingBackward(true);
+        
+        if (holdingD) this->Player1->setIsTurningRight(true);
+        else if (holdingA) this->Player1->setIsTurningLeft(true);
+        break;
 
+    case ViewTag::FIRST_PERSON:
+        if (holdingW) this->Player1->setIsLookingDown(true);
+        else if (holdingS) this->Player1->setIsLookingUp(true);
+
+        if (holdingD) this->Player1->setIsLookingRight(true);
+        else if (holdingA) this->Player1->setIsLookingLeft(true);
+        
+        //if (holdingE) this->Player1->setIsTurningRight(true);
+        //else if (holdingQ) this->Player1->setIsTurningLeft(true);
+        break;
+
+    case ViewTag::OVERHEAD:
+
+        break;
+
+    default:
+        break;
+    }
 }
 
 void Game::update() {
     /*Update Game Objects Here*/
-    this->ActiveCam = this->Cameras[activeCam];
+    this->Player1->swapView();
+    CurrentView = this->Player1->getCurrentView();
+    this->ActiveCam = this->Cameras[(int)CurrentView];
 
-    this->Player1->turn(this->Entities[0], this->Lights[0], this->Cameras[1]);
-    this->Player1->circle(this->Cameras[0]);
-    this->Player1->move(this->Entities[0], this->Lights[0], this->Cameras[0], this->Cameras[1]);
+    switch (CurrentView) {
+    case ViewTag::THIRD_PERSON:
+        this->Player1->circle(this->Cameras[0]);
+        this->Player1->turn(this->Entities[0], this->Lights[0], this->Cameras[1]);
+        this->Player1->move(this->Entities[0], this->Lights[0], this->Cameras[0], this->Cameras[1]);
+        break;
+    case ViewTag::FIRST_PERSON:
+        this->Player1->look(this->Cameras[1]);
+        break;
+    case ViewTag::OVERHEAD:
+
+        break;
+
+    default:
+        break;
+    }
+    
 }
 
 void Game::render() {
@@ -587,32 +489,18 @@ void Game::createObjects() {
     //tank source: https://free3d.com/3d-model/tank-low-poly-712984.html
 
 
-    /*
-    glm::vec3 FPovPos = glm::vec3(xV, yV, zV);
-    glm::vec3 FPovCenter = FPovPos;
-
-    PerspectiveCamera FirstPov(FPovPos, FPovCenter, 45.0f);
-
-    glm::vec3 TPovPos = glm::vec3(xV, 0, 1.0f);
-
-    PerspectiveCamera ThirdPov(TPovPos, FPovCenter, 45.0f);
-    */
-
-    //this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, 1.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
     //Camera creation
     float tankHeight = 1.5f;
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, tankHeight + 5.0f, -10.0f), glm::vec3(0.0f, tankHeight + 0.0f, 0.0f)));//0, 3rd pov
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, tankHeight, 0.0f), glm::vec3(0.0f, tankHeight, 1.0f)));//1, 1st pov
-    this->Cameras.push_back(new OrthoCamera(orthoPos, glm::vec3(0.0f), 10.0f, 0.1f, 200.0f));//2, top down
-    //this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, yV + 25.0f, 1.0f))); original
+    this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, 50.0f, -1.0f), glm::vec3(0.0f), 10.0f, 0.1f, 200.0f));//2, top down
+    
     //Setting Active Camera
-    this->ActiveCam = this->Cameras[0];
-
-    std::cout << "Current Camera: " << activeCam << std::endl;
+    this->ActiveCam = this->Cameras[(int)CurrentView];
 
     //Light creation
-    this->Lights.push_back(new PointLight(glm::vec3(0.0f, 2.0f, 0.0f)));
+    this->Lights.push_back(new PointLight(this->Cameras[1]->getCenter()));
     this->Lights.push_back(new DirLight(glm::vec3(20.0f, 20.0f, 20.0f)));
 
-    Player1 = new Player(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    Player1 = new Player(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f), CurrentView);
 }

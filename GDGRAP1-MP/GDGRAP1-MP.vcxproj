@@ -50,6 +50,7 @@
     <ClInclude Include="Model\Enum\MeshType.hpp" />
     <ClInclude Include="Model\Enum\NormType.hpp" />
     <ClInclude Include="Model\Enum\TexType.hpp" />
+    <ClInclude Include="Model\Enum\ViewTag.hpp" />
     <ClInclude Include="Model\Light\DirLight.hpp" />
     <ClInclude Include="Model\Model3D.hpp" />
     <ClInclude Include="Model\Light.hpp" />
