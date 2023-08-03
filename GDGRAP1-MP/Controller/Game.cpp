@@ -536,8 +536,7 @@ void Game::createMeshes() {
 void Game::createTextures() {
     std::string texPaths[]{
         "3D/brickwall.jpg",
-        "3D/SnowTerrain/SnowTerrain.jpg"
-        //"3D/Grass_Terrain/Grass_Terrain.jpg"
+        "3D/Grass_Terrain/Grass_Terrain.jpg"
         //, "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
     };
 
