@@ -53,7 +53,7 @@ float yTilt = 0.0f;
 
 //for ortho cam
 float xOrtho = 0;
-float yOrtho = yV + 25.0f;
+float yOrtho = yV + 100.0f;
 float zOrtho = 1.0f;
 
 glm::vec3 orthoPos = glm::vec3(xOrtho, yOrtho, zOrtho);
