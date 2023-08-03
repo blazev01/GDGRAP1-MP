@@ -27,7 +27,6 @@ Model3D::Model3D(
     this->texture = texture;
     this->normalMap = normalMap;
     this->transformation = glm::mat4(1.0f);
-    this->scalar = scale;
     this->translate(position);
     this->scale(scale);
 }
@@ -129,7 +128,6 @@ void Model3D::scale(float x, float y, float z) {
 // @brief Handles the scale transformation of the model via a single float value to be added to all axes.
 // @param scalar - Acts as both X, Y, and Z components of the scale value
 void Model3D::scale(float scalar) {
-    this->scalar *= scalar;
     this->scale(glm::vec3(scalar, scalar, scalar));
 }
 
@@ -174,6 +172,6 @@ glm::mat4 Model3D::getTransformation() {
     return this->transformation;
 }
 
-float Model3D::getScale() {
-    return this->scalar;
+glm::vec3 Model3D::getPosition() {
+    return glm::vec3(this->transformation[3][0], this->transformation[3][1], this->transformation[3][2]);
 }

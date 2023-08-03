@@ -400,9 +400,9 @@ void Game::update() {
     /*Update Game Objects Here*/
     this->ActiveCam = this->Cameras[activeCam];
 
-    this->Player1->turn(this->Entities[0]);
+    this->Player1->turn(this->Entities[0], this->Lights[0]);
     this->Player1->circle(this->Cameras[0]);
-    this->Player1->move(this->Entities[0], this->Cameras[0]);
+    this->Player1->move(this->Entities[0], this->Lights[0], this->Cameras[0]);
 }
 
 void Game::render() {
@@ -609,7 +609,7 @@ void Game::createObjects() {
     std::cout << "Current Camera: " << activeCam << std::endl;
 
     //Light creation
-    this->Lights.push_back(new PointLight(glm::vec3(2.0f)));
+    this->Lights.push_back(new PointLight(glm::vec3(0.0f, 2.0f, 0.0f)));
     this->Lights.push_back(new DirLight(glm::vec3(20.0f, 20.0f, 20.0f)));
 
     Player1 = new Player(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
