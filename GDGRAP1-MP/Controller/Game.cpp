@@ -422,7 +422,12 @@ void Game::createMeshes() {
     std::string meshPaths[]{
         "3D/panzer_tank/panzer_tank_fixed.obj",
         "3D/Grass_Terrain/Grass_Terrain_Fixed.obj",
-        "3D/Watermelon/watermelon.obj"
+        "3D/Watermelon/watermelon.obj",
+        "3D/Rope_Block/rope_block.obj",
+        "3D/board/board.obj",
+        "3D/Planks/Plank.obj"
+        //"3D/RockSet/RockSet.obj"
+        //"3D/Bullet/bullet.obj"
         //, "3D/Cat Lamp/Cat Lamp.obj"
     };
 
@@ -436,7 +441,11 @@ void Game::createTextures() {
         "3D/panzer_tank/hull.jpg",
         //"3D/brickwall.jpg",
         "3D/SnowTerrain/SnowTerrain.jpg",
-        "3D/Watermelon/watermelon.jpg"
+        "3D/Watermelon/watermelon.jpg",
+        "3D/Rope_Block/rope_block.jpg",
+        "3D/panzer_tank/tracks.jpg",
+        "3D/Planks/texture2.jpg"
+        //"3D/RockSet/Rock5.jpg"
         //"3D/Grass_Terrain/Grass_Terrain.jpg"
         //, "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
     };
@@ -475,7 +484,11 @@ void Game::createBuffers() {
     MeshType types[]{
         MeshType::MODEL_01,
         MeshType::MODEL_02,
-        MeshType::MODEL_03
+        MeshType::MODEL_03,
+        MeshType::MODEL_04,
+        MeshType::MODEL_05,
+        MeshType::MODEL_06
+        //MeshType::MODEL_07
     };
 
     int dimensions[]{ 3,3,2,3,3 };
@@ -530,10 +543,52 @@ void Game::createObjects() {
         0.1f
     ));
 
+    this->Entities.push_back(new Model3D(
+        "Rope Block",
+        MeshType::MODEL_04,
+        this->meshes[3],
+        this->BaseShaders,
+        this->textures[3],
+        NULL,
+        0.2f
+    ));
+
+    this->Entities.push_back(new Model3D(
+        "Board",
+        MeshType::MODEL_05,
+        this->meshes[4],
+        this->BaseShaders,
+        this->textures[4],
+        NULL,
+        1.0f
+    ));
+
+    this->Entities.push_back(new Model3D(
+        "Planks",
+        MeshType::MODEL_06,
+        this->meshes[5],
+        this->BaseShaders,
+        this->textures[5],
+        NULL,
+        1.0f
+    ));
+
+    /*
+    this->Entities.push_back(new Model3D(
+        "Rocks",
+        MeshType::MODEL_07,
+        this->meshes[6],
+        this->BaseShaders,
+        this->textures[6],
+        NULL,
+        1.0f
+    ));
+    */
+    
+
     //Elf Girl source: https://sketchfab.com/3d-models/elf-girl-52f2e84961b94760b7805c178890d644
     //Cat Lamp source: https://sketchfab.com/3d-models/uwu-cat-night-light-9c9767328ec54bf29c39765671e1033f
     //tank source: https://free3d.com/3d-model/tank-low-poly-712984.html
-
 
     //Camera creation
     float tankHeight = 1.5f;
@@ -553,4 +608,23 @@ void Game::createObjects() {
     //watermelon
     this->Entities[2]->setPosition(glm::vec3(5.0f, 0.8f, 0.1f));
     this->Entities[2]->scale(0.1f, 0.1f, 0.1f);
+
+    //rope block
+    this->Entities[3]->setPosition(glm::vec3(-10.0f, 0.0f, 8.0f));
+    this->Entities[3]->rotate(90, -1, 0, 0);
+    this->Entities[3]->scale(1.0f, 1.0f, 1.0f);
+
+    //board
+    this->Entities[4]->setPosition(glm::vec3(5.0f, 0.2f, -10.0f));
+    //this->Entities[4]->rotate(180, -1, 0, 0);
+    this->Entities[4]->scale(0.05f, 0.05f, 0.05f);
+
+    //planks
+    this->Entities[5]->setPosition(glm::vec3(11.0f, -0.2f, -2.0f));
+    this->Entities[5]->rotate(90, 0, 1, 0);
+    this->Entities[5]->scale(0.7f, 0.7f, 0.7f);
+
+    //rocks
+    //this->Entities[6]->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
+    //this->Entities[6]->scale(0.1f, 0.1f, 0.1f);
 }
