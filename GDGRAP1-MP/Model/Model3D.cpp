@@ -44,11 +44,13 @@ void Model3D::draw(Camera* Cam, std::vector<Light*> Lights) {
         this->drawLight(Cam, p);
     }
 
-    this->Shaders->setBool("hasTexture", this->texture != NULL);
-    this->Shaders->setTexture("tex0", this->texture, GL_TEXTURE0, GL_TEXTURE_2D, 0);
+    bool hasTexture = this->texture != NULL;
+    this->Shaders->setBool("hasTexture", hasTexture);
+    if (hasTexture) this->Shaders->setTexture("tex0", this->texture, GL_TEXTURE0, GL_TEXTURE_2D, 0);
     
-    this->Shaders->setBool("hasNormal", this->normalMap != NULL);
-    this->Shaders->setTexture("normTex", this->normalMap, GL_TEXTURE1, GL_TEXTURE_2D, 1);
+    bool hasNormal = this->normalMap != NULL;
+    this->Shaders->setBool("hasNormal", hasNormal);
+    if (hasNormal) this->Shaders->setTexture("normTex", this->normalMap, GL_TEXTURE1, GL_TEXTURE_2D, 1);
 }
 
 // @brief Manages the lighting of models with respect to the camera position.
