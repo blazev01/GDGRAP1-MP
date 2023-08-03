@@ -274,7 +274,11 @@ void Game::processEvents() {
         break;
 
     case ViewTag::OVERHEAD:
+        if (holdingW) this->Player1->setIsPanningUp(true);
+        else if (holdingS) this->Player1->setIsPanningDown(true);
 
+        if (holdingD) this->Player1->setIsPanningRight(true);
+        else if (holdingA) this->Player1->setIsPanningLeft(true);
         break;
 
     default:
@@ -298,7 +302,7 @@ void Game::update() {
         this->Player1->look(this->Cameras[1]);
         break;
     case ViewTag::OVERHEAD:
-
+        this->Player1->pan(this->Cameras[2]);
         break;
 
     default:

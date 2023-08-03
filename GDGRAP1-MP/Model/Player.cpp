@@ -92,6 +92,26 @@ void Player::look(Camera* Cam) {
 	}
 }
 
+void Player::pan(Camera* Cam) {
+	if (this->isPanningRight) {
+		this->isPanningRight = false;
+		Cam->movePositionWithCenter(glm::vec3(this->moveSpeed, 0.0f, 0.0f));
+	}
+	else if (this->isPanningLeft) {
+		this->isPanningLeft = false;
+		Cam->movePositionWithCenter(glm::vec3(-this->moveSpeed, 0.0f, 0.0f));
+	}
+
+	if (this->isPanningUp) {
+		this->isPanningUp = false;
+		Cam->movePositionWithCenter(glm::vec3(0.0f, 0.0f, this->moveSpeed));
+	}
+	else if (this->isPanningDown) {
+		this->isPanningDown = false;
+		Cam->movePositionWithCenter(glm::vec3(0.0f, 0.0f, -this->moveSpeed));
+	}
+}
+
 // @brief Rotates the player on its own vertical axis should they turn.
 // @param Model - Pointer to the Model3D class, pertains to the player's model on the application
 void Player::turn(Model3D* Model, Light* FlashLight, Camera* Cam) {
@@ -281,6 +301,38 @@ bool Player::getIsLookingDown() {
 // @param isLookingDown - boolean variable, self-explanatory
 void Player::setIsLookingDown(bool isLookingDown) {
 	this->isLookingDown = isLookingDown;
+}
+
+bool Player::getIsPanningRight() {
+	return this->isPanningRight;
+}
+
+void Player::setIsPanningRight(bool isPanningRight) {
+	this->isPanningRight = isPanningRight;
+}
+
+bool Player::getIsPanningLeft() {
+	return this->isPanningLeft;
+}
+
+void Player::setIsPanningLeft(bool isPanningLeft) {
+	this->isPanningLeft = isPanningLeft;
+}
+
+bool Player::getIsPanningUp() {
+	return this->isPanningUp;
+}
+
+void Player::setIsPanningUp(bool isPanningUp) {
+	this->isPanningUp = isPanningUp;
+}
+
+bool Player::getIsPanningDown() {
+	return this->isPanningDown;
+}
+
+void Player::setIsPanningDown(bool isPanningDown) {
+	this->isPanningDown = isPanningDown;
 }
 
 // @brief Gets the boolean value as to whether or not the player is turning to the right.
