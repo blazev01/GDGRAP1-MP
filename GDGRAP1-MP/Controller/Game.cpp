@@ -618,7 +618,7 @@ void Game::createObjects() {
     Player1 = new Player(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f), CurrentView);
 
     //watermelon
-    this->Entities[2]->setPosition(glm::vec3(5.0f, 0.8f, 0.1f));
+    this->Entities[2]->setPosition(glm::vec3(5.0f, 0.8f, 3.0f));
     this->Entities[2]->scale(0.1f, 0.1f, 0.1f);
 
     //rope block
@@ -627,7 +627,7 @@ void Game::createObjects() {
     this->Entities[3]->scale(1.0f, 1.0f, 1.0f);
 
     //board
-    this->Entities[4]->setPosition(glm::vec3(5.0f, 0.2f, -10.0f));
+    this->Entities[4]->setPosition(glm::vec3(-8.0f, 0.2f, -10.0f));
     //this->Entities[4]->rotate(180, -1, 0, 0);
     this->Entities[4]->scale(0.05f, 0.05f, 0.05f);
 
