@@ -568,8 +568,7 @@ void Game::createObjects() {
         this->BaseShaders,
         this->textures[0],
         this->normals[0],
-        1.0f,
-        glm::vec3(0.0f, 0.0f, 0.0f)
+        1.0f
     ));
 
     this->Entities.push_back(new Model3D(
@@ -577,7 +576,9 @@ void Game::createObjects() {
         MeshType::MODEL_02,
         this->meshes[1],
         this->BaseShaders,
-        this->textures[1]
+        this->textures[1],
+        NULL,
+        0.1f
     ));
 
     //Elf Girl source: https://sketchfab.com/3d-models/elf-girl-52f2e84961b94760b7805c178890d644
