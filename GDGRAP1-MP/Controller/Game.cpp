@@ -118,7 +118,7 @@ void keyCallback(
 
     if (key == GLFW_KEY_2 &&
         action == GLFW_RELEASE) {
-        toggleOverhead = true;
+        released2 = true;
     }
 
     if (key == GLFW_KEY_C &&
