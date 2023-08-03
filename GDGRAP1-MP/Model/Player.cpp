@@ -45,6 +45,9 @@ void Player::circle(Camera* Cam) {
 		Cam->orbit(-this->orbitSpeed, 1.0f, 0.0f, 0.0f);
 	}
 
+	if (Cam->getPosition().y <= 0.0f) {
+		Cam->setPosition(glm::vec3(Cam->getPosition().x, 0.00f, Cam->getPosition().z));
+	}
 }
 
 // @brief Tilts the camera to where the player is looking at.
