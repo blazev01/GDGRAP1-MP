@@ -22,6 +22,12 @@ Player::Player(glm::vec3 position, glm::vec3 forward, ViewTag CurrentView) {
 	this->isLookingLeft = false;
 	this->isLookingUp = false;
 	this->isLookingDown = false;
+	this->isZoomingOut = false;
+	this->isZoomingIn = false;
+	this->isPanningRight = false;
+	this->isPanningLeft = false;
+	this->isPanningUp = false;
+	this->isPanningDown = false;
 	this->isTurningRight = false;
 	this->isTurningLeft = false;
 	this->isMovingForward = false;
@@ -64,12 +70,8 @@ void Player::circle(Camera* Cam) {
 	}
 	else if (this->isOrbitingDown) {
 		this->isOrbitingDown = false;
-		if (Cam->getPosition().y > 0.5f)
+		if (Cam->getPosition().y > this->fpCamHeight)
 		Cam->orbit(-this->orbitSpeed, 1.0f, 0.0f, 0.0f);
-	}
-
-	if (Cam->getPosition().y <= 0.0f) {
-		Cam->setPosition(glm::vec3(Cam->getPosition().x, 0.00f, Cam->getPosition().z));
 	}
 }
 
@@ -122,6 +124,20 @@ void Player::pan(Camera* Cam) {
 	}
 	
 }
+
+
+
+void Player::zoom(PerspectiveCamera* Cam) {
+	if (this->isZoomingOut) {
+		this->isZoomingOut = false;
+		Cam->setFOV(Cam->getFOV() + this->zoomSpeed);
+	}
+	else if (this->isZoomingIn) {
+		this->isZoomingIn = false;
+		Cam->setFOV(Cam->getFOV() - this->zoomSpeed);
+	}
+}
+
 
 // @brief Rotates the player on its own vertical axis should they turn.
 // @param Model - Pointer to the Model3D class, pertains to the player's model on the application
@@ -210,25 +226,12 @@ ViewTag Player::getCurrentView() {
 	return this->CurrentView;
 }
 
-bool Player::getTogglePersonView() {
-	return this->togglePersonView;
-}
-
 void Player::setTogglePersonView(bool togglePersonView) {
 	this->togglePersonView = togglePersonView;
 }
 
-bool Player::getToggleOverhead() {
-	return this->toggleOverhead;
-}
-
 void Player::setToggleOverhead(bool toggleOverhead) {
 	this->toggleOverhead = toggleOverhead;
-}
-
-// @brief Gets the boolean value as to whether or not the player is orbiting right.
-bool Player::getIsOrbitingRight() {
-	return this->isOrbitingRight;
 }
 
 // @brief Sets the boolean value as to whether or not the player is orbiting right.
@@ -237,20 +240,10 @@ void Player::setIsOrbitingRight(bool isOrbitingRight) {
 	this->isOrbitingRight = isOrbitingRight;
 }
 
-// @brief Gets the boolean value as to whether or not the player is orbiting left.
-bool Player::getIsOrbitingLeft() {
-	return this->isOrbitingRight;
-}
-
 // @brief Sets the boolean value as to whether or not the player is orbiting left.
 // @param isOrbitingLeft - boolean value, self explanatory
 void Player::setIsOrbitingLeft(bool isOrbitingLeft) {
 	this->isOrbitingLeft = isOrbitingLeft;
-}
-
-// @brief Gets the boolean value as to whether or not the player is orbiting up.
-bool Player::getIsOrbitingUp() {
-	return this->isOrbitingUp;
 }
 
 // @brief Sets the boolean value as to whether or not the player is orbiting up.
@@ -259,20 +252,10 @@ void Player::setIsOrbitingUp(bool isOrbitingUp) {
 	this->isOrbitingUp = isOrbitingUp;
 }
 
-// @brief Gets the boolean value as to whether or not the player is orbiting down.
-bool Player::getIsOrbitingDown() {
-	return this->isOrbitingDown;
-}
-
 // @brief Sets the boolean value as to whether or not the player is orbiting down.
 // @param isOrbitingDown - boolean value, self explanatory
 void Player::setIsOrbitingDown(bool isOrbitingDown) {
 	this->isOrbitingDown = isOrbitingDown;
-}
-
-// @brief Gets the boolean value as to whether or not the player is looking to the right.
-bool Player::getIsLookingRight() {
-	return this->isLookingRight;
 }
 
 // @brief Sets the boolean value as to whether or not the player is looking to the right.
@@ -281,20 +264,10 @@ void Player::setIsLookingRight(bool isLookingRight) {
 	this->isLookingRight = isLookingRight;
 }
 
-// @brief Gets the boolean value as to whether or not the player is looking to the left.
-bool Player::getIsLookingLeft() {
-	return this->isLookingLeft;
-}
-
 // @brief Sets the boolean value as to whether or not the player is looking to the left.
 // @param isLookingLeft - boolean variable, self-explanatory
 void Player::setIsLookingLeft(bool isLookingLeft) {
 	this->isLookingLeft = isLookingLeft;
-}
-
-// @brief Gets the boolean value as to whether or not the player is looking up.
-bool Player::getIsLookingUp() {
-	return this->isLookingUp;
 }
 
 // @brief Sets the boolean value as to whether or not the player is looking up.
@@ -303,52 +276,34 @@ void Player::setIsLookingUp(bool isLookingUp) {
 	this->isLookingUp = isLookingUp;
 }
 
-// @brief Gets the boolean value as to whether or not the player is looking down.
-bool Player::getIsLookingDown() {
-	return this->isLookingDown;
-}
-
 // @brief Sets the boolean value as to whether or not the player is looking down.
 // @param isLookingDown - boolean variable, self-explanatory
 void Player::setIsLookingDown(bool isLookingDown) {
 	this->isLookingDown = isLookingDown;
 }
 
-bool Player::getIsPanningRight() {
-	return this->isPanningRight;
+void Player::setIsZoomingOut(bool isZoomingOut) {
+	this->isZoomingOut = isZoomingOut;
+}
+
+void Player::setIsZoomingIn(bool isZoomingIn) {
+	this->isZoomingIn = isZoomingIn;
 }
 
 void Player::setIsPanningRight(bool isPanningRight) {
 	this->isPanningRight = isPanningRight;
 }
 
-bool Player::getIsPanningLeft() {
-	return this->isPanningLeft;
-}
-
 void Player::setIsPanningLeft(bool isPanningLeft) {
 	this->isPanningLeft = isPanningLeft;
-}
-
-bool Player::getIsPanningUp() {
-	return this->isPanningUp;
 }
 
 void Player::setIsPanningUp(bool isPanningUp) {
 	this->isPanningUp = isPanningUp;
 }
 
-bool Player::getIsPanningDown() {
-	return this->isPanningDown;
-}
-
 void Player::setIsPanningDown(bool isPanningDown) {
 	this->isPanningDown = isPanningDown;
-}
-
-// @brief Gets the boolean value as to whether or not the player is turning to the right.
-bool Player::getIsTurningRight() {
-	return this->isTurningRight;
 }
 
 // @brief Sets the boolean value as to whether or not the player is turning to the right.
@@ -357,31 +312,16 @@ void Player::setIsTurningRight(bool isTurningRight) {
 	this->isTurningRight = isTurningRight;
 }
 
-// @brief Gets the boolean value as to whether or not the player is turning to the left.
-bool Player::getIsTurningLeft() {
-	return this->isTurningLeft;
-}
-
 // @brief Sets the boolean value as to whether or not the player is turning to the left.
 // @param isTurningLeft - boolean variable, self-explanatory
 void Player::setIsTurningLeft(bool isTurningLeft) {
 	this->isTurningLeft = isTurningLeft;
 }
 
-// @brief Gets the boolean value as to whether or not the player is currently moving forward.
-bool Player::getIsMovingForward() {
-	return this->isMovingForward;
-}
-
 // @brief Sets the boolean value as to whether or not the player is currently moving forward.
 // @param isMovingForward - boolean variable, self-explanatory
 void Player::setIsMovingForward(bool isMovingForward) {
 	this->isMovingForward = isMovingForward;
-}
-
-// @brief Sets the boolean value as to whether or not the player is currently moving backward.
-bool Player::getIsMovingBackward() {
-	return this->isMovingBackward;
 }
 
 // @brief Sets the boolean value as to whether or not the player is currently moving backward.
