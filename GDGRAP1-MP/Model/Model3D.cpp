@@ -172,6 +172,7 @@ glm::mat4 Model3D::getTransformation() {
     return this->transformation;
 }
 
+// @brief Returns the model's position.
 glm::vec3 Model3D::getPosition() {
     return glm::vec3(this->transformation[3][0], this->transformation[3][1], this->transformation[3][2]);
 }
