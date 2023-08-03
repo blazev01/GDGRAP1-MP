@@ -13,7 +13,7 @@ bool isTurningLeft = false;
 bool isMovingForward = false;
 bool isMovingBackward = false;
 
-int tiltMargin = 20;
+int tiltMargin = 64;
 
 bool spaceToggled = false;
 
@@ -242,15 +242,15 @@ void cursorPosCallback(
     }
 
     if (LMB && xPos != clickX) {
-        if(xPos - clickX > tiltMargin) isOrbitingRight = true;
-        else if (xPos - clickX < -tiltMargin) isOrbitingLeft = true;
-        //yTilt = (xPos - clickX) * tiltSpeed;
+        double deltaPosX = xPos - clickX;
+        if(deltaPosX > tiltMargin) isOrbitingRight = true;
+        else if (deltaPosX < -tiltMargin) isOrbitingLeft = true;
     }
 
     if (LMB && yPos != clickY) {
-        if (yPos - clickY > tiltMargin) isOrbitingUp = true;
-        else if (yPos - clickY < -tiltMargin) isOrbitingDown = true;
-        //xTilt = (yPos - clickY) * tiltSpeed;
+        double deltaPosY = yPos - clickY;
+        if (deltaPosY > tiltMargin) isOrbitingUp = true;
+        else if (deltaPosY < -tiltMargin) isOrbitingDown = true;
     }
 }
 
@@ -269,8 +269,10 @@ void mouseButtonCallback(
     }
     else if (action == GLFW_RELEASE) {
         LMB = false;
-        xTilt = 0.0f;
-        yTilt = 0.0f;
+        isOrbitingRight = false;
+        isOrbitingLeft = false;
+        isOrbitingUp = false;
+        isOrbitingDown = false;
     }
 
 }
@@ -347,12 +349,17 @@ void Game::run() {
 
 void Game::processEvents() {
     if (isOrbitingRight) {
-        isOrbitingRight = false;
         this->Player1->setIsOrbitingRight(true);
     }
     else if (isOrbitingLeft) {
-        isOrbitingLeft = false;
         this->Player1->setIsOrbitingLeft(true);
+    }
+
+    if (isOrbitingUp) {
+        this->Player1->setIsOrbitingUp(true);
+    }
+    else if (isOrbitingDown) {
+        this->Player1->setIsOrbitingDown(true);
     }
 
     if (isLookingRight) {

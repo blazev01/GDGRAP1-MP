@@ -59,6 +59,12 @@ namespace models {
 		bool getIsOrbitingLeft();
 		void setIsOrbitingLeft(bool isOrbitingLeft);
 
+		bool getIsOrbitingUp();
+		void setIsOrbitingUp(bool isOrbitingUp);
+
+		bool getIsOrbitingDown();
+		void setIsOrbitingDown(bool isOrbitingDown);
+
 		bool getIsLookingRight();
 		void setIsLookingRight(bool isLookingRight);
 

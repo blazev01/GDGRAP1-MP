@@ -164,6 +164,28 @@ void Player::setIsOrbitingLeft(bool isOrbitingLeft) {
 	this->isOrbitingLeft = isOrbitingLeft;
 }
 
+// @brief Gets the boolean value as to whether or not the player is orbiting up.
+bool Player::getIsOrbitingUp() {
+	return this->isOrbitingUp;
+}
+
+// @brief Sets the boolean value as to whether or not the player is orbiting up.
+// @param isOrbitingUp - boolean value, self explanatory
+void Player::setIsOrbitingUp(bool isOrbitingUp) {
+	this->isOrbitingUp = isOrbitingUp;
+}
+
+// @brief Gets the boolean value as to whether or not the player is orbiting down.
+bool Player::getIsOrbitingDown() {
+	return this->isOrbitingDown;
+}
+
+// @brief Sets the boolean value as to whether or not the player is orbiting down.
+// @param isOrbitingDown - boolean value, self explanatory
+void Player::setIsOrbitingDown(bool isOrbitingDown) {
+	this->isOrbitingDown = isOrbitingDown;
+}
+
 // @brief Gets the boolean value as to whether or not the player is looking to the right.
 bool Player::getIsLookingRight() {
 	return this->isLookingRight;

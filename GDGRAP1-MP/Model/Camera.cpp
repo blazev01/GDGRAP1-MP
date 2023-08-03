@@ -139,7 +139,7 @@ void Camera::orbit(float theta, glm::vec3 axis) {
     float distance = glm::distance(this->position, this->center);
     glm::vec3 revF = glm::normalize(glm::vec3(this->position - this->center));
     glm::vec3 revR = glm::normalize(glm::cross(F, this->worldUp));
-    glm::vec3 revU = glm::normalize(glm::cross(R, F));
+    glm::vec3 revU = glm::normalize(this->worldUp);
 
     glm::mat4 orientation = glm::mat4(1.0f);
 
