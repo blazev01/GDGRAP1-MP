@@ -130,11 +130,13 @@ void Player::pan(Camera* Cam) {
 void Player::zoom(PerspectiveCamera* Cam) {
 	if (this->isZoomingOut) {
 		this->isZoomingOut = false;
-		Cam->setFOV(Cam->getFOV() + this->zoomSpeed);
+		if (Cam->getFOV() < 170.0f)
+			Cam->setFOV(Cam->getFOV() + this->zoomSpeed);
 	}
 	else if (this->isZoomingIn) {
 		this->isZoomingIn = false;
-		Cam->setFOV(Cam->getFOV() - this->zoomSpeed);
+		if (Cam->getFOV() > 1.0f)
+			Cam->setFOV(Cam->getFOV() - this->zoomSpeed);
 	}
 }
 
