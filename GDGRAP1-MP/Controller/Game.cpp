@@ -421,8 +421,8 @@ void Game::createShaders() {
 void Game::createMeshes() {
     std::string meshPaths[]{
         "3D/panzer_tank/panzer_tank_fixed.obj",
-        "3D/Grass_Terrain/Grass_Terrain_Fixed.obj"
-        //"3D/Watermelon/watermelon.obj"
+        "3D/Grass_Terrain/Grass_Terrain_Fixed.obj",
+        "3D/Watermelon/watermelon.obj"
         //, "3D/Cat Lamp/Cat Lamp.obj"
     };
 
@@ -435,7 +435,8 @@ void Game::createTextures() {
     std::string texPaths[]{
         "3D/panzer_tank/hull.jpg",
         //"3D/brickwall.jpg",
-        "3D/SnowTerrain/SnowTerrain.jpg"
+        "3D/SnowTerrain/SnowTerrain.jpg",
+        "3D/Watermelon/watermelon.jpg"
         //"3D/Grass_Terrain/Grass_Terrain.jpg"
         //, "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
     };
@@ -473,8 +474,8 @@ void Game::createNormals() {
 void Game::createBuffers() {
     MeshType types[]{
         MeshType::MODEL_01,
-        MeshType::MODEL_02
-        //MeshType::MODEL_03
+        MeshType::MODEL_02,
+        MeshType::MODEL_03
     };
 
     int dimensions[]{ 3,3,2,3,3 };
@@ -515,6 +516,16 @@ void Game::createObjects() {
         this->meshes[1],
         this->BaseShaders,
         this->textures[1],
+        NULL,
+        0.1f
+    ));
+
+    this->Entities.push_back(new Model3D(
+        "Watermelon",
+        MeshType::MODEL_03,
+        this->meshes[2],
+        this->BaseShaders,
+        this->textures[2],
         NULL,
         0.1f
     ));
