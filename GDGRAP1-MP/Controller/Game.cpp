@@ -436,8 +436,8 @@ void Game::createShaders() {
 void Game::createMeshes() {
     std::string meshPaths[]{
         "3D/panzer_tank/panzer_tank_fixed.obj",
-        "3D/Grass_Terrain/Grass_Terrain_Fixed.obj"
-        //"3D/Watermelon/watermelon.obj"
+        "3D/Grass_Terrain/Grass_Terrain_Fixed.obj",
+        "3D/Watermelon/watermelon.obj"
         //, "3D/Cat Lamp/Cat Lamp.obj"
     };
 
@@ -450,7 +450,8 @@ void Game::createTextures() {
     std::string texPaths[]{
         "3D/panzer_tank/hull.jpg",
         //"3D/brickwall.jpg",
-        "3D/SnowTerrain/SnowTerrain.jpg"
+        "3D/SnowTerrain/SnowTerrain.jpg",
+        "3D/Watermelon/watermelon.jpg"
         //"3D/Grass_Terrain/Grass_Terrain.jpg"
         //, "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
     };
@@ -488,8 +489,8 @@ void Game::createNormals() {
 void Game::createBuffers() {
     MeshType types[]{
         MeshType::MODEL_01,
-        MeshType::MODEL_02
-        //MeshType::MODEL_03
+        MeshType::MODEL_02,
+        MeshType::MODEL_03
     };
 
     int dimensions[]{ 3,3,2,3,3 };
@@ -534,6 +535,16 @@ void Game::createObjects() {
         0.1f
     ));
 
+    this->Entities.push_back(new Model3D(
+        "Watermelon",
+        MeshType::MODEL_03,
+        this->meshes[2],
+        this->BaseShaders,
+        this->textures[2],
+        NULL,
+        0.1f
+    ));
+
     //Elf Girl source: https://sketchfab.com/3d-models/elf-girl-52f2e84961b94760b7805c178890d644
     //Cat Lamp source: https://sketchfab.com/3d-models/uwu-cat-night-light-9c9767328ec54bf29c39765671e1033f
     //tank source: https://free3d.com/3d-model/tank-low-poly-712984.html
@@ -553,4 +564,8 @@ void Game::createObjects() {
     this->Lights.push_back(new DirLight(glm::vec3(20.0f, 20.0f, 20.0f)));
 
     Player1 = new Player(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f), CurrentView);
+
+    //watermelon
+    this->Entities[2]->setPosition(glm::vec3(5.0f, 0.8f, 0.1f));
+    this->Entities[2]->scale(0.1f, 0.1f, 0.1f);
 }
