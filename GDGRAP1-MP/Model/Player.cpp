@@ -38,10 +38,12 @@ void Player::circle(Camera* Cam) {
 	}
 	if (this->isOrbitingUp) {
 		this->isOrbitingUp = false;
+		if (Cam->getPosition().y < Cam->getCenterDistance() - 1.0f)
 		Cam->orbit(this->orbitSpeed, 1.0f, 0.0f, 0.0f);
 	}
 	else if (this->isOrbitingDown) {
 		this->isOrbitingDown = false;
+		if (Cam->getPosition().y > 0.5f)
 		Cam->orbit(-this->orbitSpeed, 1.0f, 0.0f, 0.0f);
 	}
 
@@ -94,20 +96,22 @@ void Player::turn(Model3D* Model, Light* FlashLight, Camera* Cam) {
 // @brief Translates the model forward/backward should the player move.
 // @param Model - Pointer to the Model3D class, pertains to the player's model on the application
 void Player::move(Model3D* Model, Light* FlashLight, Camera* ViewCam, Camera* TankCam) {
-	if (this->isMovingForward) {
-		this->isMovingForward = false;
-		glm::vec3 velocity = this->F * this->moveSpeed;
+	if (this->isMovingForward || this->isMovingBackward) {
+		glm::vec3 velocity = glm::vec3(0.0f);
+		if (this->isMovingForward) {
+			this->isMovingForward = false;
+			velocity = glm::vec3(this->F * this->moveSpeed);
+		}
+		else if (this->isMovingBackward) {
+			this->isMovingBackward = false;
+			velocity = glm::vec3(this->F * -this->moveSpeed);
+		}
+		glm::vec3 camPos = Model->getPosition();
+		camPos.y += this->fpCamHeight;
+
 		Model->translate(velocity);
-		ViewCam->translate(velocity);
-		TankCam->move(this->moveSpeed, 0.0f, 0.0f);
-		this->calcLightPos(Model, FlashLight);
-	}
-	else if (this->isMovingBackward) {
-		this->isMovingBackward = false;
-		glm::vec3 velocity = this->F * -this->moveSpeed;
-		Model->translate(velocity);
-		ViewCam->translate(velocity);
-		TankCam->move(-this->moveSpeed, 0.0f, 0.0f);
+		ViewCam->movePositionWithCenter(camPos);
+		TankCam->moveCenterWithPosition(camPos);
 		this->calcLightPos(Model, FlashLight);
 	}
 }
