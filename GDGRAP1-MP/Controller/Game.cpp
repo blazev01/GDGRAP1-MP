@@ -485,7 +485,7 @@ void Game::createShaders() {
 void Game::createMeshes() {
     std::string meshPaths[]{
         "3D/panzer_tank/panzer_tank_fixed.obj",
-        "3D/Grass_Terrain/Plane.obj"
+        "3D/Grass_Terrain/Grass_Terrain_Fixed.obj"
         //"3D/Watermelon/watermelon.obj"
         //, "3D/Cat Lamp/Cat Lamp.obj"
     };
@@ -498,7 +498,7 @@ void Game::createMeshes() {
 void Game::createTextures() {
     std::string texPaths[]{
         "3D/brickwall.jpg",
-        //"3D/Grass_Terrain/Grass_Terrain.jpg"
+        "3D/Grass_Terrain/Grass_Terrain.jpg"
         //, "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
     };
 
@@ -572,13 +572,13 @@ void Game::createObjects() {
         glm::vec3(0.0f, 0.0f, 0.0f)
     ));
 
-    /*this->Entities.push_back(new Model3D(
+    this->Entities.push_back(new Model3D(
         "Grass Plain",
         MeshType::MODEL_02,
         this->meshes[1],
         this->BaseShaders,
         this->textures[1]
-    ));*/
+    ));
 
     //Elf Girl source: https://sketchfab.com/3d-models/elf-girl-52f2e84961b94760b7805c178890d644
     //Cat Lamp source: https://sketchfab.com/3d-models/uwu-cat-night-light-9c9767328ec54bf29c39765671e1033f
