@@ -15,7 +15,7 @@ namespace models {
 		const float turnSpeed = 2.0f;
 		const float moveSpeed = 0.05f;
 
-		const float turnSpeedOffset = 0.0175f;
+		const float turnSpeedOffset = 0.00001f;
 
 		glm::vec3 position;
 		glm::vec3 worldUp;

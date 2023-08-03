@@ -89,15 +89,15 @@ void Player::turn(Model3D* Model) {
 void Player::move(Model3D* Model, Camera* Cam) {
 	if (this->isMovingForward) {
 		this->isMovingForward = false;
-		glm::vec3 velocity = this->F * -this->moveSpeed;
+		glm::vec3 velocity = this->F * this->moveSpeed;
 		Model->translate(velocity);
-		Cam->translate(velocity);
+		//Cam->translate(velocity);
 	}
 	else if (this->isMovingBackward) {
 		this->isMovingBackward = false;
-		glm::vec3 velocity = this->F * this->moveSpeed;
+		glm::vec3 velocity = this->F * -this->moveSpeed;
 		Model->translate(velocity);
-		Cam->translate(velocity);
+		//Cam->translate(velocity);
 	}
 }
 
