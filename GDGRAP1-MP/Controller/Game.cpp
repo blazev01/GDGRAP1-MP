@@ -22,6 +22,8 @@ bool spaceToggled = false;
 bool LMB = false;
 bool LMBPressed = false;
 
+bool isJumping = false;
+
 double lastX = 0;
 double lastY = 0;
 
@@ -39,6 +41,8 @@ void keyCallback(
     int mod
 )
 {
+    // No keyboard presses while jumping.
+
     if (key == GLFW_KEY_W &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
@@ -104,6 +108,11 @@ void keyCallback(
     if (key == GLFW_KEY_2 &&
         action == GLFW_RELEASE) {
         toggleOverhead = true;
+    }
+
+    if (key == GLFW_KEY_C &&
+        action == GLFW_PRESS) {
+        isJumping = true;
     }
 
 }
@@ -282,6 +291,11 @@ void Game::processEvents() {
         this->Player1->setIsMovingBackward(true);
     }
 
+    if (isJumping) {
+        isJumping = false;
+        this->Player1->setIsJumping(true);
+    }
+
 }
 
 void Game::update() {
@@ -289,6 +303,7 @@ void Game::update() {
     this->Player1->swapView();
     this->ActiveCam = this->Cameras[(int)this->Player1->getCurrentView()];
 
+    this->Player1->jump(this->Entities[0], this->Lights[0]);
     this->Player1->turn(this->Entities[0], this->Lights[0], this->Cameras[1]);
     this->Player1->circle(this->Cameras[0]);
     this->Player1->move(this->Entities[0], this->Lights[0], this->Cameras[0], this->Cameras[1]);

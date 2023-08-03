@@ -18,6 +18,11 @@ namespace models {
 		const float turnSpeed = 2.0f;
 		const float moveSpeed = 0.05f;
 
+		float positionY = 0.0f;
+		float velocityY = 0.25f;
+		float jumpSpeed = 0.1f;
+		float jumpTime = 0.1f;
+
 		const float turnSpeedOffset = 0.00001f;
 		const float camTurnOffset = 0.017454f;
 
@@ -48,6 +53,7 @@ namespace models {
 		bool isTurningLeft;
 		bool isMovingForward;
 		bool isMovingBackward;
+		bool isJumping;
 
 	public:
 		Player(glm::vec3 position, glm::vec3 forward, ViewTag CurrentView);
@@ -58,6 +64,7 @@ namespace models {
 		void look(Camera* Cam);
 		void turn(Model3D* Model, Light* FlashLight, Camera* Cam);
 		void move(Model3D* Model, Light* FlashLight, Camera* ViewCam, Camera* TankCam);
+		void jump(Model3D* Model, Light* FlashLight);
 
 	private:
 		glm::mat4 calcOrientation();
@@ -107,6 +114,9 @@ namespace models {
 
 		bool getIsMovingBackward();
 		void setIsMovingBackward(bool isMovingBackward);
+
+		bool getIsJumping();
+		void setIsJumping(bool isJumping);
 	
 	};
 }
