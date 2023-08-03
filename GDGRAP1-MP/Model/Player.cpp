@@ -5,12 +5,15 @@ using namespace models;
 // @brief The constructor of the Player class.
 // @param position - The position of the player
 // @param forward - Initial forward direction of the player
-Player::Player(glm::vec3 position, glm::vec3 forward) {
+Player::Player(glm::vec3 position, glm::vec3 forward, ViewTag CurrentView) {
 	this->position = position;
 	this->worldUp = glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f));
 	this->F = glm::normalize(forward);
 	this->orientation = this->calcOrientation();
+	this->CurrentView = CurrentView;
 
+	this->togglePersonView = false;
+	this->toggleOverhead = false;
 	this->isOrbitingRight = false;
 	this->isOrbitingLeft = false;
 	this->isOrbitingUp = false;
@@ -23,6 +26,24 @@ Player::Player(glm::vec3 position, glm::vec3 forward) {
 	this->isTurningLeft = false;
 	this->isMovingForward = false;
 	this->isMovingBackward = false;
+}
+
+void Player::swapView() {
+	if (this->togglePersonView) {
+		this->togglePersonView = false;
+		if (this->CurrentView != ViewTag::THIRD_PERSON) {
+			this->CurrentView = ViewTag::THIRD_PERSON;
+		}
+		else if (this->CurrentView != ViewTag::FIRST_PERSON) {
+			this->CurrentView = ViewTag::FIRST_PERSON;
+		}
+	}
+	else if (this->toggleOverhead) {
+		this->toggleOverhead = false;
+		if (this->CurrentView != ViewTag::OVERHEAD) {
+			this->CurrentView = ViewTag::OVERHEAD;
+		}
+	}
 }
 
 // @brief Orbits the camera around the player.
@@ -79,14 +100,14 @@ void Player::turn(Model3D* Model, Light* FlashLight, Camera* Cam) {
 		this->reorient(this->turnSpeed * this->turnSpeedOffset, glm::vec3(0.0f, 1.0f, 0.0f));
 		Model->rotate(-this->turnSpeed, 0.0f, 1.0f, 0.0f);
 		Cam->tilt(this->turnSpeed * this->camTurnOffset, 0.0f, 1.0f, 0.0f);
-		this->calcLightPos(Model, FlashLight);
+		FlashLight->setPosition(Cam->getCenter());
 	}
 	else if (this->isTurningLeft) {
 		this->isTurningLeft = false;
 		this->reorient(-this->turnSpeed * this->turnSpeedOffset, glm::vec3(0.0f, 1.0f, 0.0f));
 		Model->rotate(this->turnSpeed, 0.0f, 1.0f, 0.0f);
 		Cam->tilt(-this->turnSpeed * this->camTurnOffset, 0.0f, 1.0f, 0.0f);
-		this->calcLightPos(Model, FlashLight);
+		FlashLight->setPosition(Cam->getCenter());
 	}
 }
 
@@ -109,7 +130,7 @@ void Player::move(Model3D* Model, Light* FlashLight, Camera* ViewCam, Camera* Ta
 		Model->translate(velocity);
 		ViewCam->movePositionWithCenter(camPos);
 		TankCam->moveCenterWithPosition(camPos);
-		this->calcLightPos(Model, FlashLight);
+		FlashLight->setPosition(TankCam->getCenter());
 	}
 }
 
@@ -154,12 +175,24 @@ void Player::reorient(float theta, glm::vec3 axis) {
 	this->F.z = -this->orientation[2][2];
 }
 
-void Player::calcLightPos(Model3D* Model, Light* FlashLight) {
-	FlashLight->setPosition(glm::vec3(
-		Model->getPosition().x,
-		Model->getPosition().y + 2.0f,
-		Model->getPosition().z
-	));
+ViewTag Player::getCurrentView() {
+	return this->CurrentView;
+}
+
+bool Player::getTogglePersonView() {
+	return this->togglePersonView;
+}
+
+void Player::setTogglePersonView(bool togglePersonView) {
+	this->togglePersonView = togglePersonView;
+}
+
+bool Player::getToggleOverhead() {
+	return this->toggleOverhead;
+}
+
+void Player::setToggleOverhead(bool toggleOverhead) {
+	this->toggleOverhead = toggleOverhead;
 }
 
 // @brief Gets the boolean value as to whether or not the player is orbiting right.

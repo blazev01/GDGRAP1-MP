@@ -1,5 +1,7 @@
 #include "Game.hpp"
 
+bool togglePersonView = false;
+bool toggleOverhead = false;
 bool isOrbitingRight = false;
 bool isOrbitingLeft = false;
 bool isOrbitingUp = false;
@@ -20,43 +22,14 @@ bool spaceToggled = false;
 bool LMB = false;
 bool LMBPressed = false;
 
-int activeCam = 0;
-
-float thetaSpeed = 1.0f;
-float moveSpeed = 0.1f;
-float lightSpeed = 0.01f;
-float tiltSpeed = 0.0002;
-
-float yaw = 0.0f;
-float pitch = 0.0f;
-float roll = 0.0f;
-
-float rV = 0.0f;
-float gV = 0.0f;
-float bV = 0.0f;
-
-float xV = 0.0f;
-float yV = 0.0f;
-float zV = 0.0f;
-
-float pIntensity = 0.0f;
-float dIntensity = 0.0f;
-
 double lastX = 0;
 double lastY = 0;
 
 double clickX = 0;
 double clickY = 0;
 
-float xTilt = 0.0f;
-float yTilt = 0.0f;
+ViewTag View = ViewTag::THIRD_PERSON;
 
-//for ortho cam
-float xOrtho = 0;
-float yOrtho = yV + 100.0f;
-float zOrtho = 1.0f;
-
-glm::vec3 orthoPos = glm::vec3(xOrtho, yOrtho, zOrtho);
 
 void keyCallback(
     GLFWwindow* window,
@@ -103,107 +76,17 @@ void keyCallback(
     if (key == GLFW_KEY_Q &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        yV = moveSpeed;
+        
     }
     else if (key == GLFW_KEY_E &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        yV = -moveSpeed;
+        
     }
     else if ((key == GLFW_KEY_Q ||
         key == GLFW_KEY_E) &&
         action == GLFW_RELEASE) {
-        yV = 0.0f;
-    }
-
-    if (key == GLFW_KEY_I &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) rV = -lightSpeed;
-        else yaw = -thetaSpeed;
-    }
-    else if (key == GLFW_KEY_K &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) rV = lightSpeed;
-        else yaw = thetaSpeed;
-    }
-    else if ((key == GLFW_KEY_I ||
-        key == GLFW_KEY_K) &&
-        action == GLFW_RELEASE) {
-        if (spaceToggled)  rV = 0.0f;
-        else yaw = 0.0f;
-    }
-
-    if (key == GLFW_KEY_L &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) gV = lightSpeed;
-        else pitch = thetaSpeed;
-    }
-    else if (key == GLFW_KEY_J &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) gV = -lightSpeed;
-        else pitch = -thetaSpeed;
-    }
-    else if ((key == GLFW_KEY_L ||
-        key == GLFW_KEY_J) &&
-        action == GLFW_RELEASE) {
-        if (spaceToggled)  gV = 0.0f;
-        else pitch = 0.0f;
-    }
-
-    if (key == GLFW_KEY_U &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) bV = lightSpeed;
-        else roll = thetaSpeed;
-    }
-    else if (key == GLFW_KEY_O &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) bV = -lightSpeed;
-        else roll = -thetaSpeed;
-    }
-    else if ((key == GLFW_KEY_U ||
-        key == GLFW_KEY_O) &&
-        action == GLFW_RELEASE) {
-        if (spaceToggled)  bV = 0.0f;
-        else roll = 0.0f;
-    }
-
-    if (key == GLFW_KEY_UP &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) pIntensity = lightSpeed;
-
-    }
-    else if (key == GLFW_KEY_DOWN &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) pIntensity = -lightSpeed;
-    }
-    else if ((key == GLFW_KEY_UP ||
-        key == GLFW_KEY_DOWN) &&
-        action == GLFW_RELEASE) {
-        pIntensity = 0.0f;
-    }
-
-    if (key == GLFW_KEY_RIGHT &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) dIntensity = lightSpeed;
-    }
-    else if (key == GLFW_KEY_LEFT &&
-        action == GLFW_PRESS &&
-        action != GLFW_RELEASE) {
-        if (spaceToggled) dIntensity = -lightSpeed;
-    }
-    else if ((key == GLFW_KEY_RIGHT ||
-        key == GLFW_KEY_LEFT) &&
-        action == GLFW_RELEASE) {
-        dIntensity = 0.0f;
+        
     }
 
     if (key == GLFW_KEY_SPACE &&
@@ -215,16 +98,12 @@ void keyCallback(
 
     if (key == GLFW_KEY_1 &&
         action == GLFW_RELEASE) {
-        if (activeCam == 1 || activeCam == 2) activeCam = 0;
-        else if (activeCam == 0 || activeCam == 2) activeCam = 1;
-        std::cout << "Camera: " << activeCam << std::endl;
+        togglePersonView = true;
     }
 
     if (key == GLFW_KEY_2 &&
         action == GLFW_RELEASE) {
-        if (activeCam == 0 || activeCam == 1) activeCam = 2;
-        else if (activeCam == 2) activeCam = 0;
-        std::cout << "Camera: " << activeCam << std::endl;
+        toggleOverhead = true;
     }
 
 }
@@ -348,6 +227,15 @@ void Game::run() {
 }
 
 void Game::processEvents() {
+    if (togglePersonView) {
+        togglePersonView = false;
+        this->Player1->setTogglePersonView(true);
+    }
+    else if (toggleOverhead) {
+        toggleOverhead = false;
+        this->Player1->setToggleOverhead(true);
+    }
+
     if (isOrbitingRight) {
         this->Player1->setIsOrbitingRight(true);
     }
@@ -398,7 +286,8 @@ void Game::processEvents() {
 
 void Game::update() {
     /*Update Game Objects Here*/
-    this->ActiveCam = this->Cameras[activeCam];
+    this->Player1->swapView();
+    this->ActiveCam = this->Cameras[(int)this->Player1->getCurrentView()];
 
     this->Player1->turn(this->Entities[0], this->Lights[0], this->Cameras[1]);
     this->Player1->circle(this->Cameras[0]);
@@ -586,32 +475,18 @@ void Game::createObjects() {
     //tank source: https://free3d.com/3d-model/tank-low-poly-712984.html
 
 
-    /*
-    glm::vec3 FPovPos = glm::vec3(xV, yV, zV);
-    glm::vec3 FPovCenter = FPovPos;
-
-    PerspectiveCamera FirstPov(FPovPos, FPovCenter, 45.0f);
-
-    glm::vec3 TPovPos = glm::vec3(xV, 0, 1.0f);
-
-    PerspectiveCamera ThirdPov(TPovPos, FPovCenter, 45.0f);
-    */
-
-    //this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, 1.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
     //Camera creation
     float tankHeight = 1.5f;
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, tankHeight + 5.0f, -10.0f), glm::vec3(0.0f, tankHeight + 0.0f, 0.0f)));//0, 3rd pov
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, tankHeight, 0.0f), glm::vec3(0.0f, tankHeight, 1.0f)));//1, 1st pov
-    this->Cameras.push_back(new OrthoCamera(orthoPos, glm::vec3(0.0f), 10.0f, 0.1f, 200.0f));//2, top down
-    //this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, yV + 25.0f, 1.0f))); original
+    this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, 50.0f, -1.0f), glm::vec3(0.0f), 10.0f, 0.1f, 200.0f));//2, top down
+    
     //Setting Active Camera
-    this->ActiveCam = this->Cameras[0];
-
-    std::cout << "Current Camera: " << activeCam << std::endl;
+    this->ActiveCam = this->Cameras[(int)View];
 
     //Light creation
-    this->Lights.push_back(new PointLight(glm::vec3(0.0f, 2.0f, 0.0f)));
+    this->Lights.push_back(new PointLight(this->Cameras[1]->getCenter()));
     this->Lights.push_back(new DirLight(glm::vec3(20.0f, 20.0f, 20.0f)));
 
-    Player1 = new Player(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    Player1 = new Player(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f), View);
 }
