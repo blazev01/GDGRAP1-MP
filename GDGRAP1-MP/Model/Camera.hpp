@@ -18,6 +18,8 @@ namespace models {
         glm::mat4 view;             // Camera View Matrix
         glm::mat4 projection;       // Camera Projection Matrix
 
+        float distance;
+
     public:
         Camera(glm::vec3 position, glm::vec3 center);
 

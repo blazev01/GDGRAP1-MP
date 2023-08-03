@@ -10,6 +10,8 @@ Camera::Camera(glm::vec3 position, glm::vec3 center) {
     this->center = center;
     this->worldUp = glm::normalize(glm::vec3(0.f, 1.f, 0.f));
 
+    this->distance = glm::distance(this->position, this->center);
+
     this->orientation = this->calcOrientation();
     this->view = this->calcView();
     this->projection = glm::mat4(1.0f);
@@ -140,7 +142,7 @@ void Camera::tilt(float theta, float x, float y, float z) {
 // @param theta - The angle (in radians) by which to orbit the camera
 // @param axis - Axis of rotation where the camera will rotate around
 void Camera::orbit(float theta, glm::vec3 axis) {
-    float distance = glm::distance(this->position, this->center);
+    //float distance = glm::distance(this->position, this->center);
     glm::vec3 revF = glm::normalize(glm::vec3(this->position - this->center));
     glm::vec3 revR = glm::normalize(glm::cross(F, this->worldUp));
     glm::vec3 revU = glm::normalize(this->worldUp);
@@ -167,7 +169,11 @@ void Camera::orbit(float theta, glm::vec3 axis) {
     revF.y = -orientation[1][2];
     revF.z = -orientation[2][2];
 
-    this->position = glm::vec3((revF * distance) + this->center);
+    this->position = glm::vec3((revF * this->distance) + this->center);
+    if (this->position.y <= 0.0f) {
+        this->setPosition(glm::vec3(this->getPosition().x, 0.00f, this->getPosition().z));
+    }
+
     this->orientation = this->calcOrientation();
     this->view = this->calcView();
 }
