@@ -137,7 +137,6 @@ void Camera::orbit(float theta, glm::vec3 axis) {
     revF.z = -orientation[2][2];
 
     this->position = glm::vec3((revF * this->distance) + this->center);
-
     this->orientation = this->calcOrientation();
     this->view = this->calcView();
 }

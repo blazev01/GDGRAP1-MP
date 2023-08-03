@@ -49,6 +49,10 @@ namespace models {
 		bool isLookingLeft;
 		bool isLookingUp;
 		bool isLookingDown;
+		bool isPanningRight;
+		bool isPanningLeft;
+		bool isPanningUp;
+		bool isPanningDown;
 		bool isTurningRight;
 		bool isTurningLeft;
 		bool isMovingForward;
@@ -62,6 +66,7 @@ namespace models {
 		void swapView();
 		void circle(Camera* Cam);
 		void look(Camera* Cam);
+		void pan(Camera* Cam);
 		void turn(Model3D* Model, Light* FlashLight, Camera* Cam);
 		void move(Model3D* Model, Light* FlashLight, Camera* ViewCam, Camera* TankCam);
 		void jump(Model3D* Model, Light* FlashLight);
@@ -102,6 +107,18 @@ namespace models {
 
 		bool getIsLookingDown();
 		void setIsLookingDown(bool isLookingDown);
+
+		bool getIsPanningRight();
+		void setIsPanningRight(bool isPanningRight);
+
+		bool getIsPanningLeft();
+		void setIsPanningLeft(bool isPanningLeft);
+
+		bool getIsPanningUp();
+		void setIsPanningUp(bool isPanningUp);
+
+		bool getIsPanningDown();
+		void setIsPanningDown(bool isPanningDown);
 
 		bool getIsTurningRight();
 		void setIsTurningRight(bool isTurningRight);
