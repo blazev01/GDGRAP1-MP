@@ -15,7 +15,7 @@ bool holdingE = false;
 bool holdingA = false;
 bool holdingS = false;
 bool holdingD = false;
-
+bool holdingF = false;
 
 bool LMB = false;
 bool LMBPressed = false;
@@ -27,6 +27,8 @@ double clickX = 0;
 double clickY = 0;
 
 int dragMargin = 64;
+
+int currentIntensity = 1;
 
 ViewTag CurrentView = ViewTag::THIRD_PERSON;
 
@@ -252,6 +254,18 @@ void Game::processEvents() {
     if (draggingLMBUp) this->Player1->setIsOrbitingUp(true);
     else if (draggingLMBDown) this->Player1->setIsOrbitingDown(true);
 
+    if (releasedF) {
+        releasedF = false;
+        if (currentIntensity > 0 && currentIntensity < 3) {
+            currentIntensity++;
+        }
+        else if (currentIntensity == 3) {
+            currentIntensity = 1;
+        }
+        else {//in case out of bounds
+            currentIntensity = 1;
+        }
+    }
 
     switch (CurrentView) {
     case ViewTag::THIRD_PERSON:
@@ -309,6 +323,22 @@ void Game::update() {
         break;
     }
     
+    switch (currentIntensity) {
+    case 1:
+        this->Lights[0]->setAmbientStr(0.1f);
+        this->Lights[0]->setSpecularStr(2.0f);
+        break;
+    case 2:
+        this->Lights[0]->setAmbientStr(0.2f);
+        this->Lights[0]->setSpecularStr(3.0f);
+        break;
+    case 3:
+        this->Lights[0]->setAmbientStr(0.3f);
+        this->Lights[0]->setSpecularStr(3.0f);
+        break;
+    default:
+        break;
+    }
 }
 
 void Game::render() {
