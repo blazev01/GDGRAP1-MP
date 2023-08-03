@@ -283,8 +283,8 @@ void Game::processEvents() {
         if (holdingD) this->Player1->setIsLookingRight(true);
         else if (holdingA) this->Player1->setIsLookingLeft(true);
         
-        //if (holdingE) this->Player1->setIsTurningRight(true);
-        //else if (holdingQ) this->Player1->setIsTurningLeft(true);
+        if (holdingE) this->Player1->setIsZoomingIn(true);
+        else if (holdingQ) this->Player1->setIsZoomingOut(true);
         break;
 
     case ViewTag::OVERHEAD:
@@ -314,6 +314,7 @@ void Game::update() {
         break;
     case ViewTag::FIRST_PERSON:
         this->Player1->look(this->Cameras[1]);
+        this->Player1->zoom((PerspectiveCamera*)this->Cameras[1]);
         break;
     case ViewTag::OVERHEAD:
         this->Player1->pan(this->Cameras[2]);
@@ -439,7 +440,6 @@ void Game::createMeshes() {
 void Game::createTextures() {
     std::string texPaths[]{
         "3D/panzer_tank/hull.jpg",
-        //"3D/brickwall.jpg",
         "3D/SnowTerrain/SnowTerrain.jpg",
         "3D/Watermelon/watermelon.jpg",
         "3D/Rope_Block/rope_block.jpg",
