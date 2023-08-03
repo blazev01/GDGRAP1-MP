@@ -23,7 +23,6 @@ namespace models {
         MeshType Type;
         std::vector<GLfloat>* mesh;
         glm::mat4 transformation;
-        float scalar;
         VFShaders* Shaders;
         GLuint* texture;
         GLuint* normalMap;
@@ -58,7 +57,7 @@ namespace models {
         MeshType getMeshType();
         std::vector<GLfloat>* getMesh();
         glm::mat4 getTransformation();
-        float getScale();
+        glm::vec3 getPosition();
     };
 }
 

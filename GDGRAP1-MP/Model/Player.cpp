@@ -71,33 +71,37 @@ void Player::look(Camera* Cam) {
 
 // @brief Rotates the player on its own vertical axis should they turn.
 // @param Model - Pointer to the Model3D class, pertains to the player's model on the application
-void Player::turn(Model3D* Model) {
+void Player::turn(Model3D* Model, Light* FlashLight) {
 	if (this->isTurningRight) {
 		this->isTurningRight = false;
-		Model->rotate(-this->turnSpeed, 0.0f, 1.0f, 0.0f);
 		this->reorient(this->turnSpeed * this->turnSpeedOffset, glm::vec3(0.0f, 1.0f, 0.0f));
+		Model->rotate(-this->turnSpeed, 0.0f, 1.0f, 0.0f);
+		this->calcLightPos(Model, FlashLight);
 	}
 	else if (this->isTurningLeft) {
 		this->isTurningLeft = false;
-		Model->rotate(this->turnSpeed, 0.0f, 1.0f, 0.0f);
 		this->reorient(-this->turnSpeed * this->turnSpeedOffset, glm::vec3(0.0f, 1.0f, 0.0f));
+		Model->rotate(this->turnSpeed, 0.0f, 1.0f, 0.0f);
+		this->calcLightPos(Model, FlashLight);
 	}
 }
 
 // @brief Translates the model forward/backward should the player move.
 // @param Model - Pointer to the Model3D class, pertains to the player's model on the application
-void Player::move(Model3D* Model, Camera* Cam) {
+void Player::move(Model3D* Model, Light* FlashLight, Camera* Cam) {
 	if (this->isMovingForward) {
 		this->isMovingForward = false;
 		glm::vec3 velocity = this->F * this->moveSpeed;
 		Model->translate(velocity);
 		Cam->translate(velocity);
+		this->calcLightPos(Model, FlashLight);
 	}
 	else if (this->isMovingBackward) {
 		this->isMovingBackward = false;
 		glm::vec3 velocity = this->F * -this->moveSpeed;
 		Model->translate(velocity);
 		Cam->translate(velocity);
+		this->calcLightPos(Model, FlashLight);
 	}
 }
 
@@ -140,6 +144,14 @@ void Player::reorient(float theta, glm::vec3 axis) {
 	this->F.x = -this->orientation[0][2];
 	this->F.y = -this->orientation[1][2];
 	this->F.z = -this->orientation[2][2];
+}
+
+void Player::calcLightPos(Model3D* Model, Light* FlashLight) {
+	FlashLight->setPosition(glm::vec3(
+		Model->getPosition().x,
+		Model->getPosition().y + 2.0f,
+		Model->getPosition().z
+	));
 }
 
 // @brief Gets the boolean value as to whether or not the player is orbiting right.

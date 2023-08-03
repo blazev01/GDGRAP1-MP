@@ -45,12 +45,13 @@ namespace models {
 	public:
 		void circle(Camera* Cam);
 		void look(Camera* Cam);
-		void turn(Model3D* Model);
-		void move(Model3D* Model, Camera* Cam);
+		void turn(Model3D* Model, Light* FlashLight);
+		void move(Model3D* Model, Light* FlashLight, Camera* Cam);
 
 	private:
 		glm::mat4 calcOrientation();
 		void reorient(float theta, glm::vec3 axis);
+		void calcLightPos(Model3D* Model, Light* FlashLight);
 		
 	public:
 		bool getIsOrbitingRight();
