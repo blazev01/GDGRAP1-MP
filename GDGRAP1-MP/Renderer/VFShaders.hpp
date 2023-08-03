@@ -18,6 +18,7 @@ namespace renderers {
         VFShaders(std::string vertPath, std::string fragPath);
 
     public:
+        void setBool(const GLchar* varName, bool b);
         void setFloat(const GLchar* varName, float f);
         void setVec3(const GLchar* varName, glm::vec3 v3);
         void setMat4(const GLchar* varName, glm::mat4 m4);

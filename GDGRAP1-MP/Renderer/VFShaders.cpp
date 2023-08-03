@@ -14,13 +14,19 @@ VFShaders::VFShaders(std::string vertPath, std::string fragPath) {
     glLinkProgram(this->shaderProgram);
 }
 
+void VFShaders::setBool(const GLchar* varName, bool b) {
+    glUseProgram(this->shaderProgram);
+    GLuint boolLoc = glGetUniformLocation(this->shaderProgram, varName);
+    glUniform1i(boolLoc, b);
+}
+
 // @brief Helps set float-based values on shader variables, while the primary function is to set Ambient Strength.
 // @param varName - The designated variable located inside the shader
 // @param f - The float value to be set on varName
 void VFShaders::setFloat(const GLchar* varName, float f) {
     glUseProgram(this->shaderProgram);
-    GLuint ambientStrLoc = glGetUniformLocation(this->shaderProgram, varName);
-    glUniform1f(ambientStrLoc, f);
+    GLuint floatLoc = glGetUniformLocation(this->shaderProgram, varName);
+    glUniform1f(floatLoc, f);
 }
 
 // @brief Helps set vec3 (vector) values on shader variables, while the primary function is to set Light Position.
@@ -28,8 +34,8 @@ void VFShaders::setFloat(const GLchar* varName, float f) {
 // @param v3 - The vec3 value to be set on varName
 void VFShaders::setVec3(const GLchar* varName, glm::vec3 v3) {
     glUseProgram(this->shaderProgram);
-    GLuint lightLoc = glGetUniformLocation(this->shaderProgram, varName);
-    glUniform3fv(lightLoc, 1, glm::value_ptr(v3));
+    GLuint vec3Loc = glGetUniformLocation(this->shaderProgram, varName);
+    glUniform3fv(vec3Loc, 1, glm::value_ptr(v3));
 }
 
 // @brief Helps set mat4 (matrix) values on shader variables, while the primary function is to set a model's Transformation Matrix.
@@ -37,8 +43,8 @@ void VFShaders::setVec3(const GLchar* varName, glm::vec3 v3) {
 // @param m4 - The mat4 value to be set on varName
 void VFShaders::setMat4(const GLchar* varName, glm::mat4 m4) {
     glUseProgram(this->shaderProgram);
-    unsigned int transformLoc = glGetUniformLocation(this->shaderProgram, varName);
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m4));
+    GLuint mat4Loc = glGetUniformLocation(this->shaderProgram, varName);
+    glUniformMatrix4fv(mat4Loc, 1, GL_FALSE, glm::value_ptr(m4));
 }
 
 // @brief Sets the texture of a 3D model.

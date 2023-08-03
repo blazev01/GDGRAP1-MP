@@ -18,13 +18,17 @@ Camera::Camera(glm::vec3 position, glm::vec3 center) {
 // @brief Handles the translation of the camera.
 // @param position - The translation vector, NOT the current position of the camera
 void Camera::translate(glm::vec3 position) {
-    glm::mat4 tMat = glm::translate(glm::mat4(1.0f), position);
-    glm::vec4 positionV4 = glm::vec4(tMat * glm::vec4(this->position, 1.0f));
-    glm::vec4 centerV4 = glm::vec4(tMat * glm::vec4(this->center, 1.0f));
-    this->position = glm::vec3(positionV4);
-    //this->center = glm::vec3(centerV4);
-    //this->position += position;
-    //this->center += position;
+    //glm::mat4 tMat = glm::translate(glm::mat4(1.0f), position);
+    //glm::vec4 positionV4 = glm::vec4(tMat * glm::vec4(this->position, 1.0f));
+    //glm::vec4 centerV4 = glm::vec4(tMat * glm::vec4(this->center, 1.0f));
+    //this->position = glm::vec3(positionV4);
+    ////this->center = glm::vec3(centerV4);
+    ////this->position += position;
+    ////this->center += position;
+    this->position.x += position.x;
+    this->position.y += position.y;
+    this->center.x += position.x;
+    this->center.y += position.y;
     this->orientation = this->calcOrientation();
     this->view = this->calcView();
 }

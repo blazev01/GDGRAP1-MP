@@ -50,6 +50,9 @@ out vec4 FragColor;
 
 uniform vec3 cameraPos;
 
+uniform bool hasTexture;
+uniform bool hasNormal;
+
 uniform DirLight DLight;
 uniform PointLight PLight;
 uniform SpotLight SLight;
@@ -103,9 +106,15 @@ void main() {
 	vec4 pixelColor = texture(tex0, texCoord);
 	if(pixelColor.a < 0.1) discard;
 
-	vec3 normal = texture(normTex, texCoord).rgb;
-	normal = normalize(normal * 2.0 - 1.0);
-	normal = normalize(TBN * normal);
+
+	vec3 normal;
+	if (hasNormal) {
+		normal = texture(normTex, texCoord).rgb;
+		normal = normalize(normal * 2.0 - 1.0);
+		normal = normalize(TBN * normal);
+	}
+	else normal = normalize(normCoord);
+
 
 	vec3 viewDir = normalize(cameraPos - fragPos);
 
@@ -118,5 +127,6 @@ void main() {
 		calcPointLight(PLight, normal, viewDir) +
 		calcDirLight(DLight, normal, viewDir);
 
-	FragColor = lighting * texture(tex0, texCoord);
+	if (hasTexture) FragColor = lighting * texture(tex0, texCoord);
+	else FragColor = lighting * vec4(1.0, 0.0, 1.0, 1.0);
 }

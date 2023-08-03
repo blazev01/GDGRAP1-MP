@@ -485,7 +485,7 @@ void Game::createShaders() {
 void Game::createMeshes() {
     std::string meshPaths[]{
         "3D/panzer_tank/panzer_tank_fixed.obj",
-        //"3D/board/board.obj",
+        "3D/Grass_Terrain/Plane.obj"
         //"3D/Watermelon/watermelon.obj"
         //, "3D/Cat Lamp/Cat Lamp.obj"
     };
@@ -497,7 +497,8 @@ void Game::createMeshes() {
 
 void Game::createTextures() {
     std::string texPaths[]{
-        "3D/brickwall.jpg"
+        "3D/brickwall.jpg",
+        //"3D/Grass_Terrain/Grass_Terrain.jpg"
         //, "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
     };
 
@@ -558,32 +559,26 @@ void Game::createBuffers() {
 
 void Game::createObjects() {
     //Entity creation
-    std::string entityNames[]{
-        "Tank",
-        //"Watermelon",
-        //"Board"
-        //, "Cat Lamp"
-    };
-
-    MeshType types[]{
-        MeshType::MODEL_01,
-        MeshType::MODEL_02,
-        //MeshType::MODEL_03
-    };
 
     std::vector<Model3D*> Entities;
-    for (int i = 0; i < sizeof(entityNames) / sizeof(std::string); i++) {
-        this->Entities.push_back(new Model3D(
-            entityNames[i],
-            types[i],
-            this->meshes[i],
-            this->BaseShaders,
-            this->textures[i],
-            this->normals[i],
-            1.0f,
-            glm::vec3(0.0f, i * 0.5f, 0.0f)
-        ));
-    }
+    this->Entities.push_back(new Model3D(
+        "Tank",
+        MeshType::MODEL_01,
+        this->meshes[0],
+        this->BaseShaders,
+        this->textures[0],
+        this->normals[0],
+        1.0f,
+        glm::vec3(0.0f, 0.0f, 0.0f)
+    ));
+
+    /*this->Entities.push_back(new Model3D(
+        "Grass Plain",
+        MeshType::MODEL_02,
+        this->meshes[1],
+        this->BaseShaders,
+        this->textures[1]
+    ));*/
 
     //Elf Girl source: https://sketchfab.com/3d-models/elf-girl-52f2e84961b94760b7805c178890d644
     //Cat Lamp source: https://sketchfab.com/3d-models/uwu-cat-night-light-9c9767328ec54bf29c39765671e1033f
@@ -614,7 +609,7 @@ void Game::createObjects() {
 
     //Light creation
     this->Lights.push_back(new PointLight(glm::vec3(2.0f)));
-    this->Lights.push_back(new DirLight(glm::vec3(4.0f, 11.0f, -3.0f)));
+    this->Lights.push_back(new DirLight(glm::vec3(20.0f, 20.0f, 20.0f)));
 
     Player1 = new Player(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 }
