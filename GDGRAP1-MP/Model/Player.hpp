@@ -14,8 +14,7 @@ namespace models {
 	class Player {
 	private:
 		const float orbitSpeed = 0.05f;
-		const float lookSpeed = 0.05f;
-		const float panSpeed = 0.5f;
+		const float lookSpeed = 0.05;
 		const float turnSpeed = 2.0f;
 		const float moveSpeed = 0.05f;
 

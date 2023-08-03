@@ -15,7 +15,7 @@ bool holdingE = false;
 bool holdingA = false;
 bool holdingS = false;
 bool holdingD = false;
-
+bool holdingF = false;
 
 bool LMB = false;
 bool LMBPressed = false;
@@ -27,6 +27,8 @@ double clickX = 0;
 double clickY = 0;
 
 int dragMargin = 64;
+
+int currentIntensity = 1;
 
 ViewTag CurrentView = ViewTag::THIRD_PERSON;
 
@@ -252,6 +254,18 @@ void Game::processEvents() {
     if (draggingLMBUp) this->Player1->setIsOrbitingUp(true);
     else if (draggingLMBDown) this->Player1->setIsOrbitingDown(true);
 
+    if (releasedF) {
+        releasedF = false;
+        if (currentIntensity > 0 && currentIntensity < 3) {
+            currentIntensity++;
+        }
+        else if (currentIntensity == 3) {
+            currentIntensity = 1;
+        }
+        else {//in case out of bounds
+            currentIntensity = 1;
+        }
+    }
 
     switch (CurrentView) {
     case ViewTag::THIRD_PERSON:
@@ -263,8 +277,8 @@ void Game::processEvents() {
         break;
 
     case ViewTag::FIRST_PERSON:
-        if (holdingW) this->Player1->setIsLookingUp(true);
-        else if (holdingS) this->Player1->setIsLookingDown(true);
+        if (holdingW) this->Player1->setIsLookingDown(true);
+        else if (holdingS) this->Player1->setIsLookingUp(true);
 
         if (holdingD) this->Player1->setIsLookingRight(true);
         else if (holdingA) this->Player1->setIsLookingLeft(true);
@@ -277,8 +291,8 @@ void Game::processEvents() {
         if (holdingW) this->Player1->setIsPanningUp(true);
         else if (holdingS) this->Player1->setIsPanningDown(true);
 
-        if (holdingD) this->Player1->setIsPanningLeft(true);
-        else if (holdingA) this->Player1->setIsPanningRight(true);
+        if (holdingD) this->Player1->setIsPanningRight(true);
+        else if (holdingA) this->Player1->setIsPanningLeft(true);
         break;
 
     default:
@@ -309,6 +323,22 @@ void Game::update() {
         break;
     }
     
+    switch (currentIntensity) {//toggles light intensity
+    case 1:
+        this->Lights[0]->setAmbientStr(0.1f);
+        this->Lights[0]->setSpecularStr(2.0f);
+        break;
+    case 2:
+        this->Lights[0]->setAmbientStr(0.2f);
+        this->Lights[0]->setSpecularStr(3.0f);
+        break;
+    case 3:
+        this->Lights[0]->setAmbientStr(0.3f);
+        this->Lights[0]->setSpecularStr(3.0f);
+        break;
+    default:
+        break;
+    }
 }
 
 void Game::render() {
@@ -391,8 +421,8 @@ void Game::createShaders() {
 void Game::createMeshes() {
     std::string meshPaths[]{
         "3D/panzer_tank/panzer_tank_fixed.obj",
-        "3D/Grass_Terrain/Grass_Terrain_Fixed.obj"
-        //"3D/Watermelon/watermelon.obj"
+        "3D/Grass_Terrain/Grass_Terrain_Fixed.obj",
+        "3D/Watermelon/watermelon.obj"
         //, "3D/Cat Lamp/Cat Lamp.obj"
     };
 
@@ -403,8 +433,10 @@ void Game::createMeshes() {
 
 void Game::createTextures() {
     std::string texPaths[]{
-        "3D/brickwall.jpg",
-        "3D/SnowTerrain/SnowTerrain.jpg"
+        "3D/panzer_tank/hull.jpg",
+        //"3D/brickwall.jpg",
+        "3D/SnowTerrain/SnowTerrain.jpg",
+        "3D/Watermelon/watermelon.jpg"
         //"3D/Grass_Terrain/Grass_Terrain.jpg"
         //, "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
     };
@@ -442,8 +474,8 @@ void Game::createNormals() {
 void Game::createBuffers() {
     MeshType types[]{
         MeshType::MODEL_01,
-        MeshType::MODEL_02
-        //MeshType::MODEL_03
+        MeshType::MODEL_02,
+        MeshType::MODEL_03
     };
 
     int dimensions[]{ 3,3,2,3,3 };
@@ -488,6 +520,16 @@ void Game::createObjects() {
         0.1f
     ));
 
+    this->Entities.push_back(new Model3D(
+        "Watermelon",
+        MeshType::MODEL_03,
+        this->meshes[2],
+        this->BaseShaders,
+        this->textures[2],
+        NULL,
+        0.1f
+    ));
+
     //Elf Girl source: https://sketchfab.com/3d-models/elf-girl-52f2e84961b94760b7805c178890d644
     //Cat Lamp source: https://sketchfab.com/3d-models/uwu-cat-night-light-9c9767328ec54bf29c39765671e1033f
     //tank source: https://free3d.com/3d-model/tank-low-poly-712984.html
@@ -507,4 +549,8 @@ void Game::createObjects() {
     this->Lights.push_back(new DirLight(glm::vec3(20.0f, 20.0f, 20.0f)));
 
     Player1 = new Player(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f), CurrentView);
+
+    //watermelon
+    this->Entities[2]->setPosition(glm::vec3(5.0f, 0.8f, 0.1f));
+    this->Entities[2]->scale(0.1f, 0.1f, 0.1f);
 }
