@@ -44,6 +44,10 @@ namespace models {
 		bool isLookingLeft;
 		bool isLookingUp;
 		bool isLookingDown;
+		bool isPanningRight;
+		bool isPanningLeft;
+		bool isPanningUp;
+		bool isPanningDown;
 		bool isTurningRight;
 		bool isTurningLeft;
 		bool isMovingForward;
