@@ -176,7 +176,7 @@ Game::Game() {
     if (!glfwInit())
         exit(0);
 
-    this->window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Vaughn Vincent Cordero", NULL, NULL);
+    this->window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Cao, Cordero, ShuTu", NULL, NULL);
     if (!this->window)
     {
         glfwTerminate();
