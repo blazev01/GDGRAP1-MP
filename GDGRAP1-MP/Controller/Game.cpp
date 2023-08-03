@@ -425,8 +425,9 @@ void Game::createMeshes() {
         "3D/Watermelon/watermelon.obj",
         "3D/Rope_Block/rope_block.obj",
         "3D/board/board.obj",
-        "3D/Planks/Plank.obj"
-        //"3D/RockSet/RockSet.obj"
+        "3D/Planks/Plank.obj",
+        "3D/Dog.obj"
+        //"3D/Rock1/Rock1.obj"
         //"3D/Bullet/bullet.obj"
         //, "3D/Cat Lamp/Cat Lamp.obj"
     };
@@ -444,8 +445,9 @@ void Game::createTextures() {
         "3D/Watermelon/watermelon.jpg",
         "3D/Rope_Block/rope_block.jpg",
         "3D/panzer_tank/tracks.jpg",
-        "3D/Planks/texture2.jpg"
-        //"3D/RockSet/Rock5.jpg"
+        "3D/Planks/texture2.jpg",
+        "3D/panzer_tank/turret.jpg"
+        //"3D/Rock1/Rock.jpg"
         //"3D/Grass_Terrain/Grass_Terrain.jpg"
         //, "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
     };
@@ -487,8 +489,8 @@ void Game::createBuffers() {
         MeshType::MODEL_03,
         MeshType::MODEL_04,
         MeshType::MODEL_05,
-        MeshType::MODEL_06
-        //MeshType::MODEL_07
+        MeshType::MODEL_06,
+        MeshType::MODEL_07
     };
 
     int dimensions[]{ 3,3,2,3,3 };
@@ -573,9 +575,9 @@ void Game::createObjects() {
         1.0f
     ));
 
-    /*
+    
     this->Entities.push_back(new Model3D(
-        "Rocks",
+        "Dog Statue",
         MeshType::MODEL_07,
         this->meshes[6],
         this->BaseShaders,
@@ -583,7 +585,7 @@ void Game::createObjects() {
         NULL,
         1.0f
     ));
-    */
+    
     
 
     //Elf Girl source: https://sketchfab.com/3d-models/elf-girl-52f2e84961b94760b7805c178890d644
@@ -624,7 +626,8 @@ void Game::createObjects() {
     this->Entities[5]->rotate(90, 0, 1, 0);
     this->Entities[5]->scale(0.7f, 0.7f, 0.7f);
 
-    //rocks
-    //this->Entities[6]->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
-    //this->Entities[6]->scale(0.1f, 0.1f, 0.1f);
+    //dog statue
+    this->Entities[6]->setPosition(glm::vec3(0.0f, 0.0f, -10.0f));
+    this->Entities[6]->rotate(90, -1, 0, 0);
+    this->Entities[6]->scale(0.05f, 0.05f, 0.05f);
 }
