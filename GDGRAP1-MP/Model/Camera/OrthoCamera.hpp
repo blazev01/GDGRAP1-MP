@@ -11,8 +11,6 @@ namespace models {
         float viewScale;
         float near;
         float far;
-        float xOffset;
-        float yOffset;
 
     public:
         OrthoCamera(
@@ -23,11 +21,10 @@ namespace models {
             float far = 100.0f
         );
 
-        
-
-    public:
+    private:
         glm::mat4 calcProjection();
 
+    public:
         float getViewScale();
         void setViewScale(float scale);
 
@@ -36,12 +33,6 @@ namespace models {
 
         float getFar();
         void setFar(float far);
-
-        float getXOffset();
-        void setXOffset(float offset);
-
-        float getYOffset();
-        void setYOffset(float offset);
 	};
 }
 

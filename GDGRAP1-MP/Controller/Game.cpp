@@ -13,8 +13,6 @@ bool isTurningLeft = false;
 bool isMovingForward = false;
 bool isMovingBackward = false;
 
-bool isTopDownView = false;
-
 int tiltMargin = 64;
 
 bool spaceToggled = false;
@@ -58,12 +56,7 @@ float xOrtho = 0;
 float yOrtho = yV + 100.0f;
 float zOrtho = 1.0f;
 
-float xOffset = 0.0f;
-float yOffset = 0.0f;
-
 glm::vec3 orthoPos = glm::vec3(xOrtho, yOrtho, zOrtho);
-
-using namespace controllers;
 
 void keyCallback(
     GLFWwindow* window,
@@ -76,52 +69,35 @@ void keyCallback(
     if (key == GLFW_KEY_W &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        if (!isTopDownView)
-            isMovingForward = true;
-        else
-            yOffset++;
+        isMovingForward = true;
     }
     else if (key == GLFW_KEY_S &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        if (!isTopDownView)
-            isMovingBackward = true;
-        else
-            yOffset--;
+        isMovingBackward = true;
     }
     else if ((key == GLFW_KEY_W ||
         key == GLFW_KEY_S) &&
         action == GLFW_RELEASE) {
-        if (!isTopDownView) {
-            isMovingForward = false;
-            isMovingBackward = false;
-        }
+        isMovingForward = false;
+        isMovingBackward = false;
     }
 
     if (key == GLFW_KEY_D &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        if (!isTopDownView)
-            isTurningRight = true;
-        else
-            xOffset++;
+        isTurningRight = true;
     }
     else if (key == GLFW_KEY_A &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
-        if (!isTopDownView)
-            isTurningLeft = true;
-        else
-            xOffset--;
+        isTurningLeft = true;
     }
     else if ((key == GLFW_KEY_D ||
         key == GLFW_KEY_A) &&
         action == GLFW_RELEASE) {
-        if (!isTopDownView) {
-            isTurningRight = false;
-            isTurningLeft = false;
-        }
-        
+        isTurningRight = false;
+        isTurningLeft = false;
     }
 
     if (key == GLFW_KEY_Q &&
@@ -241,21 +217,13 @@ void keyCallback(
         action == GLFW_RELEASE) {
         if (activeCam == 1 || activeCam == 2) activeCam = 0;
         else if (activeCam == 0 || activeCam == 2) activeCam = 1;
-
-        isTopDownView = false;
         std::cout << "Camera: " << activeCam << std::endl;
     }
 
     if (key == GLFW_KEY_2 &&
         action == GLFW_RELEASE) {
-        if (activeCam == 0 || activeCam == 1) {
-            activeCam = 2;
-            isTopDownView = true;
-        }
-        else if (activeCam == 2) {
-            activeCam = 0;
-            isTopDownView = false;
-        }
+        if (activeCam == 0 || activeCam == 1) activeCam = 2;
+        else if (activeCam == 2) activeCam = 0;
         std::cout << "Camera: " << activeCam << std::endl;
     }
 
@@ -308,6 +276,9 @@ void mouseButtonCallback(
     }
 
 }
+
+
+using namespace controllers;
 
 Game::Game() {
     /* Initialize the library */
@@ -423,15 +394,6 @@ void Game::processEvents() {
         this->Player1->setIsMovingBackward(true);
     }
 
-    // Supposedly helps in panning the Orthographic Camera but nope--
-    if (isTopDownView) {
-        OrthoCamera* pOrthoCamera = (OrthoCamera*)this->Cameras[2];
-        pOrthoCamera->setXOffset(xOffset);
-        pOrthoCamera->setYOffset(yOffset);
-        
-        glm::mat4 projection = pOrthoCamera->calcProjection();
-    }
-
 }
 
 void Game::update() {
@@ -456,7 +418,7 @@ void Game::render() {
     this->SkyVAO->bind();
     this->Sky->buffer();
 
-    //Object render
+    //object render
     for (int i = 0; i < this->Entities.size(); i++) {
         this->Entities[i]->draw(this->ActiveCam, this->Lights);
         this->VAOs[this->Entities[i]->getMeshType()]->bind();
