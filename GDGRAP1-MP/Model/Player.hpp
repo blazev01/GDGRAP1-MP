@@ -12,8 +12,10 @@ namespace models {
 	private:
 		const float orbitSpeed = 0.05f;
 		const float lookSpeed = 0.05;
-		const float turnSpeed = 1.0f;
+		const float turnSpeed = 2.0f;
 		const float moveSpeed = 0.05f;
+
+		const float turnSpeedOffset = 0.0175f;
 
 		glm::vec3 position;
 		glm::vec3 worldUp;

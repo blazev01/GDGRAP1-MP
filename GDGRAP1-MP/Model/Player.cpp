@@ -75,12 +75,12 @@ void Player::turn(Model3D* Model) {
 	if (this->isTurningRight) {
 		this->isTurningRight = false;
 		Model->rotate(-this->turnSpeed, 0.0f, 1.0f, 0.0f);
-		this->reorient(this->turnSpeed * 0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+		this->reorient(this->turnSpeed * this->turnSpeedOffset, glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 	else if (this->isTurningLeft) {
 		this->isTurningLeft = false;
 		Model->rotate(this->turnSpeed, 0.0f, 1.0f, 0.0f);
-		this->reorient(-this->turnSpeed * 0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+		this->reorient(-this->turnSpeed * this->turnSpeedOffset, glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 }
 
