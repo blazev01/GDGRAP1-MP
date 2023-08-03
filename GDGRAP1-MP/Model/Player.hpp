@@ -16,6 +16,7 @@ namespace models {
 		const float moveSpeed = 0.05f;
 
 		const float turnSpeedOffset = 0.00001f;
+		const float camTurnOffset = 0.017454f;
 
 		glm::vec3 position;
 		glm::vec3 worldUp;
@@ -45,8 +46,8 @@ namespace models {
 	public:
 		void circle(Camera* Cam);
 		void look(Camera* Cam);
-		void turn(Model3D* Model, Light* FlashLight);
-		void move(Model3D* Model, Light* FlashLight, Camera* Cam);
+		void turn(Model3D* Model, Light* FlashLight, Camera* Cam);
+		void move(Model3D* Model, Light* FlashLight, Camera* ViewCam, Camera* TankCam);
 
 	private:
 		glm::mat4 calcOrientation();

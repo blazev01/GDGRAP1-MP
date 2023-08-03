@@ -71,36 +71,40 @@ void Player::look(Camera* Cam) {
 
 // @brief Rotates the player on its own vertical axis should they turn.
 // @param Model - Pointer to the Model3D class, pertains to the player's model on the application
-void Player::turn(Model3D* Model, Light* FlashLight) {
+void Player::turn(Model3D* Model, Light* FlashLight, Camera* Cam) {
 	if (this->isTurningRight) {
 		this->isTurningRight = false;
 		this->reorient(this->turnSpeed * this->turnSpeedOffset, glm::vec3(0.0f, 1.0f, 0.0f));
 		Model->rotate(-this->turnSpeed, 0.0f, 1.0f, 0.0f);
+		Cam->tilt(this->turnSpeed * this->camTurnOffset, 0.0f, 1.0f, 0.0f);
 		this->calcLightPos(Model, FlashLight);
 	}
 	else if (this->isTurningLeft) {
 		this->isTurningLeft = false;
 		this->reorient(-this->turnSpeed * this->turnSpeedOffset, glm::vec3(0.0f, 1.0f, 0.0f));
 		Model->rotate(this->turnSpeed, 0.0f, 1.0f, 0.0f);
+		Cam->tilt(-this->turnSpeed * this->camTurnOffset, 0.0f, 1.0f, 0.0f);
 		this->calcLightPos(Model, FlashLight);
 	}
 }
 
 // @brief Translates the model forward/backward should the player move.
 // @param Model - Pointer to the Model3D class, pertains to the player's model on the application
-void Player::move(Model3D* Model, Light* FlashLight, Camera* Cam) {
+void Player::move(Model3D* Model, Light* FlashLight, Camera* ViewCam, Camera* TankCam) {
 	if (this->isMovingForward) {
 		this->isMovingForward = false;
 		glm::vec3 velocity = this->F * this->moveSpeed;
 		Model->translate(velocity);
-		Cam->translate(velocity);
+		ViewCam->translate(velocity);
+		TankCam->move(this->moveSpeed, 0.0f, 0.0f);
 		this->calcLightPos(Model, FlashLight);
 	}
 	else if (this->isMovingBackward) {
 		this->isMovingBackward = false;
 		glm::vec3 velocity = this->F * -this->moveSpeed;
 		Model->translate(velocity);
-		Cam->translate(velocity);
+		ViewCam->translate(velocity);
+		TankCam->move(-this->moveSpeed, 0.0f, 0.0f);
 		this->calcLightPos(Model, FlashLight);
 	}
 }
