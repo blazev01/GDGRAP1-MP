@@ -1,0 +1,10 @@
+#ifndef ENUMS_VIEW_TAG_HPP
+#define ENUMS_VIEW_TAG_HPP
+
+enum ViewTag {
+	THIRD_PERSON,
+	FIRST_PERSON,
+	OVERHEAD
+};
+
+#endif

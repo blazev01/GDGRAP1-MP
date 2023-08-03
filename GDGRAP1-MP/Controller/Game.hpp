@@ -11,6 +11,7 @@
 #include "../Config/Settings.hpp"
 
 #include "../Model/Enum/MeshType.hpp"
+#include "../Model/Enum/ViewTag.hpp"
 
 #include "Manager/MeshManager.hpp"
 #include "Manager/TextureManager.hpp"

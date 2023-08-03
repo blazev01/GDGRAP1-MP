@@ -185,6 +185,9 @@
     <ClInclude Include="Model\Player.hpp">
       <Filter>Header Files\Models</Filter>
     </ClInclude>
+    <ClInclude Include="Model\Enum\ViewTag.hpp">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Shaders\Skybox.frag">
