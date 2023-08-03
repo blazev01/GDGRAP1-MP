@@ -277,8 +277,8 @@ void Game::processEvents() {
         break;
 
     case ViewTag::FIRST_PERSON:
-        if (holdingW) this->Player1->setIsLookingDown(true);
-        else if (holdingS) this->Player1->setIsLookingUp(true);
+        if (holdingW) this->Player1->setIsLookingUp(true);
+        else if (holdingS) this->Player1->setIsLookingDown(true);
 
         if (holdingD) this->Player1->setIsLookingRight(true);
         else if (holdingA) this->Player1->setIsLookingLeft(true);
@@ -291,8 +291,8 @@ void Game::processEvents() {
         if (holdingW) this->Player1->setIsPanningUp(true);
         else if (holdingS) this->Player1->setIsPanningDown(true);
 
-        if (holdingD) this->Player1->setIsPanningRight(true);
-        else if (holdingA) this->Player1->setIsPanningLeft(true);
+        if (holdingD) this->Player1->setIsPanningLeft(true);
+        else if (holdingA) this->Player1->setIsPanningRight(true);
         break;
 
     default:

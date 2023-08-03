@@ -87,32 +87,40 @@ void Player::look(Camera* Cam) {
 
 	if (this->isLookingUp) {
 		this->isLookingUp = false;
-		Cam->tilt(this->lookSpeed, 1.0f, 0.0f, 0.0f);
+		Cam->tilt(-this->lookSpeed, 1.0f, 0.0f, 0.0f);
 	}
 	else if (this->isLookingDown) {
 		this->isLookingDown = false;
-		Cam->tilt(-this->lookSpeed, 1.0f, 0.0f, 0.0f);
+		Cam->tilt(this->lookSpeed, 1.0f, 0.0f, 0.0f);
 	}
 }
 
 void Player::pan(Camera* Cam) {
-	if (this->isPanningRight) {
-		this->isPanningRight = false;
-		Cam->movePositionWithCenter(glm::vec3(this->moveSpeed, 0.0f, 0.0f));
-	}
-	else if (this->isPanningLeft) {
-		this->isPanningLeft = false;
-		Cam->movePositionWithCenter(glm::vec3(-this->moveSpeed, 0.0f, 0.0f));
-	}
+	if (this->isPanningRight || this->isPanningLeft ||
+		this->isPanningUp || this->isPanningDown) {
+		glm::vec3 newPos = Cam->getCenter();
 
-	if (this->isPanningUp) {
-		this->isPanningUp = false;
-		Cam->movePositionWithCenter(glm::vec3(0.0f, 0.0f, this->moveSpeed));
+		if (this->isPanningRight) {
+			this->isPanningRight = false;
+			newPos.x += this->panSpeed;
+		}
+		else if (this->isPanningLeft) {
+			this->isPanningLeft = false;
+			newPos.x -= this->panSpeed;
+		}
+
+		if (this->isPanningUp) {
+			this->isPanningUp = false;
+			newPos.z += this->panSpeed;
+		}
+		else if (this->isPanningDown) {
+			this->isPanningDown = false;
+			newPos.z -= this->panSpeed;
+		}
+
+		Cam->movePositionWithCenter(newPos);
 	}
-	else if (this->isPanningDown) {
-		this->isPanningDown = false;
-		Cam->movePositionWithCenter(glm::vec3(0.0f, 0.0f, -this->moveSpeed));
-	}
+	
 }
 
 // @brief Rotates the player on its own vertical axis should they turn.
