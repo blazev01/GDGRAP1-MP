@@ -34,6 +34,10 @@ void Skybox::buffer() {
     glDepthFunc(GL_LESS);
 }
 
+void Skybox::setShaders(VFShaders* Shaders) {
+    this->Shaders = Shaders;
+}
+
 // @brief Returns a vector containing the vertex data of the skybox.
 // @return vertices
 std::vector<GLfloat> Skybox::getVertices() {

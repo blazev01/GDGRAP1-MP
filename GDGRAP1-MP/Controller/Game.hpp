@@ -39,7 +39,9 @@ namespace controllers {
         GLFWwindow* window;
 
         VFShaders* BaseShaders;
+        VFShaders* NightVision;
         VFShaders* SkyShaders;
+        VFShaders* SkyNightVision;
 
         Skybox* Sky;
 

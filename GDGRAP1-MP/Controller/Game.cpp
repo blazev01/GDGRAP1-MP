@@ -183,7 +183,7 @@ Game::Game() {
     if (!glfwInit())
         exit(0);
 
-    this->window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Vaughn Vincent Cordero", NULL, NULL);
+    this->window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Cao, Cordero, ShuTu", NULL, NULL);
     if (!this->window)
     {
         glfwTerminate();
@@ -278,8 +278,8 @@ void Game::processEvents() {
         if (holdingD) this->Player1->setIsLookingRight(true);
         else if (holdingA) this->Player1->setIsLookingLeft(true);
         
-        //if (holdingE) this->Player1->setIsTurningRight(true);
-        //else if (holdingQ) this->Player1->setIsTurningLeft(true);
+        if (holdingE) this->Player1->setIsZoomingIn(true);
+        else if (holdingQ) this->Player1->setIsZoomingOut(true);
         break;
 
     case ViewTag::OVERHEAD:
@@ -302,7 +302,7 @@ void Game::processEvents() {
 
 void Game::update() {
     /*Update Game Objects Here*/
-    this->Player1->swapView();
+    this->Player1->swapView((PerspectiveCamera*)this->Cameras[1]);
     CurrentView = this->Player1->getCurrentView();
     this->ActiveCam = this->Cameras[(int)CurrentView];
 
@@ -315,6 +315,7 @@ void Game::update() {
         break;
     case ViewTag::FIRST_PERSON:
         this->Player1->look(this->Cameras[1]);
+        this->Player1->zoom((PerspectiveCamera*)this->Cameras[1]);
         break;
     case ViewTag::OVERHEAD:
         this->Player1->pan(this->Cameras[2]);
@@ -324,6 +325,35 @@ void Game::update() {
         break;
     }
     
+    switch (currentIntensity) {//toggles light intensity
+    case 1:
+        this->Lights[0]->setAmbientStr(0.1f);
+        this->Lights[0]->setSpecularStr(2.0f);
+        break;
+    case 2:
+        this->Lights[0]->setAmbientStr(0.2f);
+        this->Lights[0]->setSpecularStr(3.0f);
+        break;
+    case 3:
+        this->Lights[0]->setAmbientStr(0.3f);
+        this->Lights[0]->setSpecularStr(3.0f);
+        break;
+    default:
+        break;
+    }
+
+    if (CurrentView == ViewTag::FIRST_PERSON) {
+        this->Sky->setShaders(this->SkyNightVision);
+        for (Model3D* p : this->Entities) {
+            p->setShaders(this->NightVision);
+        }
+    }
+    else {
+        this->Sky->setShaders(this->SkyShaders);
+        for (Model3D* p : this->Entities) {
+            p->setShaders(this->BaseShaders);
+        }
+    }
 }
 
 void Game::render() {
@@ -350,6 +380,7 @@ void Game::render() {
 void Game::createSkybox() {
     //shaders creation
     this->SkyShaders = new VFShaders("Shaders/Skybox.vert", "Shaders/Skybox.frag");
+    this->SkyNightVision = new VFShaders("Shaders/Skybox.vert", "Shaders/SkyNightVision.frag");
 
     const char* facesSkybox[]{
         "Skybox/nightsky_rt.png",
@@ -401,14 +432,19 @@ void Game::createSkybox() {
 
 void Game::createShaders() {
     this->BaseShaders = new VFShaders("Shaders/Default.vert", "Shaders/Default.frag");
+    this->NightVision = new VFShaders("Shaders/Default.vert", "Shaders/NightVision.frag");
 }
 
 void Game::createMeshes() {
     std::string meshPaths[]{
         "3D/panzer_tank/panzer_tank_fixed.obj",
-        "3D/Grass_Terrain/Grass_Terrain_Fixed.obj"
-        //"3D/Watermelon/watermelon.obj"
-        //, "3D/Cat Lamp/Cat Lamp.obj"
+        "3D/Grass_Terrain/Grass_Terrain_Fixed.obj",
+        "3D/Watermelon/watermelon.obj",
+        "3D/Rope_Block/rope_block.obj",
+        "3D/board/board.obj",
+        "3D/Planks/Plank.obj",
+        "3D/Dog.obj",
+        "3D/Grenade/Grenade.obj"
     };
 
     for (int i = 0; i < sizeof(meshPaths) / sizeof(std::string); i++) {
@@ -418,10 +454,14 @@ void Game::createMeshes() {
 
 void Game::createTextures() {
     std::string texPaths[]{
+        "3D/panzer_tank/hull.jpg",
+        "3D/SnowTerrain/SnowTerrain.jpg",
+        "3D/Watermelon/watermelon.jpg",
+        "3D/Rope_Block/rope_block.jpg",
         "3D/brickwall.jpg",
-        "3D/SnowTerrain/SnowTerrain.jpg"
-        //"3D/Grass_Terrain/Grass_Terrain.jpg"
-        //, "3D/Cat Lamp/Cat_Lamp_Albedo.tga.png"
+        "3D/Planks/texture2.jpg",
+        "3D/panzer_tank/turret.jpg",
+        "3D/Grass_Terrain/Grass_Terrain.jpg"
     };
 
     for (int i = 0; i < sizeof(texPaths) / sizeof(std::string); i++) {
@@ -437,10 +477,7 @@ void Game::createTextures() {
 
 void Game::createNormals() {
     std::string normalPaths[]{
-        "3D/brickwall_normal.jpg",
-        //"3D/Watermelon/watermelon.jpg",
-        // "3D/brickwall_normal.jpg
-        //, "3D/Cat Lamp/Cat_Lamp_Normal.tga.png"
+        "3D/brickwall_normal.jpg"
     };
 
     for (int i = 0; i < sizeof(normalPaths) / sizeof(std::string); i++) {
@@ -457,8 +494,13 @@ void Game::createNormals() {
 void Game::createBuffers() {
     MeshType types[]{
         MeshType::MODEL_01,
-        MeshType::MODEL_02
-        //MeshType::MODEL_03
+        MeshType::MODEL_02,
+        MeshType::MODEL_03,
+        MeshType::MODEL_04,
+        MeshType::MODEL_05,
+        MeshType::MODEL_06,
+        MeshType::MODEL_07,
+        MeshType::MODEL_08
     };
 
     int dimensions[]{ 3,3,2,3,3 };
@@ -503,13 +545,68 @@ void Game::createObjects() {
         0.1f
     ));
 
-    //Elf Girl source: https://sketchfab.com/3d-models/elf-girl-52f2e84961b94760b7805c178890d644
-    //Cat Lamp source: https://sketchfab.com/3d-models/uwu-cat-night-light-9c9767328ec54bf29c39765671e1033f
-    //tank source: https://free3d.com/3d-model/tank-low-poly-712984.html
+    this->Entities.push_back(new Model3D(
+        "Watermelon",
+        MeshType::MODEL_03,
+        this->meshes[2],
+        this->BaseShaders,
+        this->textures[2],
+        NULL,
+        0.1f
+    ));
 
+    this->Entities.push_back(new Model3D(
+        "Rope Block",
+        MeshType::MODEL_04,
+        this->meshes[3],
+        this->BaseShaders,
+        this->textures[3],
+        NULL,
+        0.2f
+    ));
+
+    this->Entities.push_back(new Model3D(
+        "Board",
+        MeshType::MODEL_05,
+        this->meshes[4],
+        this->BaseShaders,
+        this->textures[4],
+        NULL,
+        1.0f
+    ));
+
+    this->Entities.push_back(new Model3D(
+        "Planks",
+        MeshType::MODEL_06,
+        this->meshes[5],
+        this->BaseShaders,
+        this->textures[5],
+        NULL,
+        1.0f
+    ));
+    
+    this->Entities.push_back(new Model3D(
+        "Dog Statue",
+        MeshType::MODEL_07,
+        this->meshes[6],
+        this->BaseShaders,
+        this->textures[6],
+        NULL,
+        1.0f
+    ));
+    
+    this->Entities.push_back(new Model3D(
+        "Grenade",
+        MeshType::MODEL_08,
+        this->meshes[7],
+        this->BaseShaders,
+        this->textures[7],
+        NULL,
+        1.0f
+    ));
 
     //Camera creation
-    float tankHeight = 1.5f;
+    float tankHeight = 1.6f;
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, tankHeight + 5.0f, -10.0f), glm::vec3(0.0f, tankHeight + 0.0f, 0.0f)));//0, 3rd pov
     this->Cameras.push_back(new PerspectiveCamera(glm::vec3(0.0f, tankHeight, 0.0f), glm::vec3(0.0f, tankHeight, 1.0f)));//1, 1st pov
     this->Cameras.push_back(new OrthoCamera(glm::vec3(0.0f, 50.0f, -1.0f), glm::vec3(0.0f), 10.0f, 0.1f, 200.0f));//2, top down
@@ -521,5 +618,34 @@ void Game::createObjects() {
     this->Lights.push_back(new PointLight(this->Cameras[1]->getCenter()));
     this->Lights.push_back(new DirLight(glm::vec3(20.0f, 20.0f, 20.0f)));
 
-    Player1 = new Player(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f), CurrentView);
+    this->Lights[1]->setAmbientStr(0.01f);
+
+    Player1 = new Player(this->Cameras[1]->getPosition(), this->Cameras[1]->getCenter(), CurrentView);
+
+    //watermelon
+    this->Entities[2]->setPosition(glm::vec3(5.0f, 0.8f, 3.0f));
+    this->Entities[2]->scale(0.1f, 0.1f, 0.1f);
+
+    //rope block
+    this->Entities[3]->setPosition(glm::vec3(-10.0f, 0.0f, 8.0f));
+    this->Entities[3]->rotate(90, -1, 0, 0);
+    this->Entities[3]->scale(1.0f, 1.0f, 1.0f);
+
+    //board
+    this->Entities[4]->setPosition(glm::vec3(-8.0f, 0.2f, -10.0f));
+    this->Entities[4]->scale(0.05f, 0.05f, 0.05f);
+
+    //planks
+    this->Entities[5]->setPosition(glm::vec3(11.0f, -0.2f, -2.0f));
+    this->Entities[5]->rotate(90, 0, 1, 0);
+    this->Entities[5]->scale(0.7f, 0.7f, 0.7f);
+
+    //dog statue
+    this->Entities[6]->setPosition(glm::vec3(0.0f, 0.0f, -10.0f));
+    this->Entities[6]->rotate(90, -1, 0, 0);
+    this->Entities[6]->scale(0.05f, 0.05f, 0.05f);
+
+    //grenade
+    this->Entities[7]->setPosition(glm::vec3(0.0f, 0.1f, 10.0f));
+    this->Entities[7]->scale(0.05f, 0.05f, 0.05f);
 }

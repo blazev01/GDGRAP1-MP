@@ -5,6 +5,10 @@
 
 using namespace controllers;
 
+// @brief Loads the texture for the model and sets the loaded texture as a 2D image.
+// @param path - The file path of the texture file to be loaded.
+// @param flipVert - A boolean variable toggling whether the texture should be flipped vertically.
+// @param target - A GLenum variable showing what type of texture it will load (e.g. GL_TEXTURE_2D).
 void TextureManager::load(const char* path, bool flipVert, GLenum target) {
     stbi_set_flip_vertically_on_load(flipVert);
     
@@ -41,6 +45,7 @@ void TextureManager::load(const char* path, bool flipVert, GLenum target) {
     stbi_image_free(data);
 }
 
+// @brief Singleton Content for Texture Manager, allowing it to be called on other files without an instantiated variable provided the file path is part of the #include files.
 TextureManager* TextureManager::SHARED_INSTANCE = NULL;
 
 TextureManager::TextureManager() {}

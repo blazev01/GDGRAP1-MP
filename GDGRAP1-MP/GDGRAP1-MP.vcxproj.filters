@@ -204,6 +204,12 @@
     <None Include="Shaders\Default.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="Shaders\NightVision.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Shaders\SkyNightVision.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GDGRAP1-MP.rc">

@@ -54,6 +54,8 @@ namespace models {
         void buffer();
 
     public:
+        void setShaders(VFShaders* Shaders);
+
         std::vector<GLfloat> getVertices();
 
         std::vector<GLuint> getIndices();

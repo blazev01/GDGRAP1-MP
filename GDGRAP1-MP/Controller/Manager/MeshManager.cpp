@@ -5,6 +5,8 @@
 
 using namespace controllers;
 
+// @brief Loads the mesh for the model and provides a vector of vertex data from the loaded OBJ file.
+// @param path - The file path of the OBJ file to be loaded
 std::vector<GLfloat> MeshManager::load(std::string path) {
     tinyobj::attrib_t attributes;
     std::vector<tinyobj::shape_t> shapes;
@@ -138,6 +140,7 @@ std::vector<GLfloat> MeshManager::load(std::string path) {
     }
 }
 
+// @brief Singleton Content for Mesh Manager, allowing it to be called on other files without an instantiated variable provided the file path is part of the #include files.
 MeshManager* MeshManager::SHARED_INSTANCE = NULL;
 
 MeshManager::MeshManager() {}

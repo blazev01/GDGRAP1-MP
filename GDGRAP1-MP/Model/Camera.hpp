@@ -29,6 +29,8 @@ namespace models {
         void move(float f, float r, float u);
         void moveCenterWithPosition(glm::vec3 position);
         void movePositionWithCenter(glm::vec3 center);
+        void swivel(float theta, glm::vec3 axis);
+        void swivel(float theta, float x, float y, float z);
         void tilt(float theta, glm::vec3 axis);
         void tilt(float theta, float x, float y, float z);
         void orbit(float theta, glm::vec3 axis);

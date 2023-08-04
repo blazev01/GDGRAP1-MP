@@ -53,6 +53,7 @@ namespace models {
 
     public:
         void setPosition(glm::vec3 position);
+        void setShaders(VFShaders* Shaders);
 
         MeshType getMeshType();
         std::vector<GLfloat>* getMesh();

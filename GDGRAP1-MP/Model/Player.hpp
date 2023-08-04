@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "Camera.hpp"
+#include "Camera/PerspectiveCamera.hpp"
 #include "Model3D.hpp"
 #include "Light.hpp"
 
@@ -14,8 +15,9 @@ namespace models {
 	class Player {
 	private:
 		const float orbitSpeed = 0.05f;
-		const float lookSpeed = 0.05f;
+		const float lookSpeed = 0.01f;
 		const float panSpeed = 0.5f;
+		const float zoomSpeed = 0.5f;
 		const float turnSpeed = 2.0f;
 		const float moveSpeed = 0.05f;
 
@@ -26,11 +28,13 @@ namespace models {
 
 		const float turnSpeedOffset = 0.00001f;
 		const float camTurnOffset = 0.017454f;
+		const float defaultFOV = 45.0f;
 
-		const float fpCamHeight = 1.5f;
+		float fpCamHeight;
 
 		glm::vec3 position;
 		glm::vec3 worldUp;
+		glm::vec3 lastCamCenter;
 
 		glm::vec3 F;
 		glm::vec3 R;
@@ -50,6 +54,8 @@ namespace models {
 		bool isLookingLeft;
 		bool isLookingUp;
 		bool isLookingDown;
+		bool isZoomingOut;
+		bool isZoomingIn;
 		bool isPanningRight;
 		bool isPanningLeft;
 		bool isPanningUp;
@@ -64,10 +70,11 @@ namespace models {
 		Player(glm::vec3 position, glm::vec3 forward, ViewTag CurrentView);
 
 	public:
-		void swapView();
+		void swapView(PerspectiveCamera* Cam);
 		void circle(Camera* Cam);
 		void look(Camera* Cam);
 		void pan(Camera* Cam);
+		void zoom(PerspectiveCamera* Cam);
 		void turn(Model3D* Model, Light* FlashLight, Camera* Cam);
 		void move(Model3D* Model, Light* FlashLight, Camera* ViewCam, Camera* TankCam);
 		void jump(Model3D* Model, Light* FlashLight);
@@ -79,58 +86,25 @@ namespace models {
 	public:
 		ViewTag getCurrentView();
 
-		bool getTogglePersonView();
 		void setTogglePersonView(bool togglePersonView);
-
-		bool getToggleOverhead();
 		void setToggleOverhead(bool toggleOverhead);
-
-		bool getIsOrbitingRight();
 		void setIsOrbitingRight(bool isOrbitingRight);
-
-		bool getIsOrbitingLeft();
 		void setIsOrbitingLeft(bool isOrbitingLeft);
-
-		bool getIsOrbitingUp();
 		void setIsOrbitingUp(bool isOrbitingUp);
-
-		bool getIsOrbitingDown();
 		void setIsOrbitingDown(bool isOrbitingDown);
-
-		bool getIsLookingRight();
 		void setIsLookingRight(bool isLookingRight);
-
-		bool getIsLookingLeft();
 		void setIsLookingLeft(bool isLookingLeft);
-
-		bool getIsLookingUp();
 		void setIsLookingUp(bool isLookingUp);
-
-		bool getIsLookingDown();
 		void setIsLookingDown(bool isLookingDown);
-
-		bool getIsPanningRight();
+		void setIsZoomingOut(bool isZoomingOut);
+		void setIsZoomingIn(bool isZoomingIn);
 		void setIsPanningRight(bool isPanningRight);
-
-		bool getIsPanningLeft();
 		void setIsPanningLeft(bool isPanningLeft);
-
-		bool getIsPanningUp();
 		void setIsPanningUp(bool isPanningUp);
-
-		bool getIsPanningDown();
 		void setIsPanningDown(bool isPanningDown);
-
-		bool getIsTurningRight();
 		void setIsTurningRight(bool isTurningRight);
-
-		bool getIsTurningLeft();
 		void setIsTurningLeft(bool isTurningLeft);
-
-		bool getIsMovingForward();
 		void setIsMovingForward(bool isMovingForward);
-
-		bool getIsMovingBackward();
 		void setIsMovingBackward(bool isMovingBackward);
 
 		bool getIsJumping();
