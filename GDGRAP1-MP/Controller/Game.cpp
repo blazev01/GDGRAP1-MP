@@ -340,6 +340,20 @@ void Game::update() {
     default:
         break;
     }
+
+    if (CurrentView == ViewTag::FIRST_PERSON) {
+        this->Sky->setShaders(this->SkyNightVision);
+        for (Model3D* p : this->Entities) {
+            p->setShaders(this->NightVision);
+        }
+    }
+    else {
+        this->Sky->setShaders(this->SkyShaders);
+        for (Model3D* p : this->Entities) {
+            p->setShaders(this->BaseShaders);
+        }
+    }
+
 }
 
 void Game::render() {
@@ -366,6 +380,7 @@ void Game::render() {
 void Game::createSkybox() {
     //shaders creation
     this->SkyShaders = new VFShaders("Shaders/Skybox.vert", "Shaders/Skybox.frag");
+    this->SkyNightVision = new VFShaders("Shaders/Skybox.vert", "Shaders/SkyNightVision.frag");
 
     const char* facesSkybox[]{
         "Skybox/nightsky_rt.png",
@@ -417,6 +432,7 @@ void Game::createSkybox() {
 
 void Game::createShaders() {
     this->BaseShaders = new VFShaders("Shaders/Default.vert", "Shaders/Default.frag");
+    this->NightVision = new VFShaders("Shaders/Default.vert", "Shaders/NightVision.frag");
 }
 
 void Game::createMeshes() {
@@ -429,9 +445,6 @@ void Game::createMeshes() {
         "3D/Planks/Plank.obj",
         "3D/Dog.obj",
         "3D/Grenade/Grenade.obj"
-        //"3D/Rock1/Rock1.obj"
-        //"3D/Bullet/bullet.obj"
-        //, "3D/Cat Lamp/Cat Lamp.obj"
     };
 
     for (int i = 0; i < sizeof(meshPaths) / sizeof(std::string); i++) {
@@ -604,6 +617,8 @@ void Game::createObjects() {
     //Light creation
     this->Lights.push_back(new PointLight(this->Cameras[1]->getCenter()));
     this->Lights.push_back(new DirLight(glm::vec3(20.0f, 20.0f, 20.0f)));
+
+    this->Lights[1]->setAmbientStr(0.01f);
 
     Player1 = new Player(this->Cameras[1]->getPosition(), this->Cameras[1]->getCenter(), CurrentView);
 

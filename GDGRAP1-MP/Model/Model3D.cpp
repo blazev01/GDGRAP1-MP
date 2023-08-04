@@ -157,6 +157,10 @@ void Model3D::setPosition(glm::vec3 position) {
     this->transformation = glm::translate(glm::mat4(this->transformation[1][1]), position);
 }
 
+void Model3D::setShaders(VFShaders* Shaders) {
+    this->Shaders = Shaders;
+}
+
 // @brief Returns the model's mesh type.
 MeshType Model3D::getMeshType() {
     return this->Type;

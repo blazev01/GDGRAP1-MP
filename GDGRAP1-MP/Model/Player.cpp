@@ -39,9 +39,11 @@ Player::Player(glm::vec3 position, glm::vec3 center, ViewTag CurrentView) {
 void Player::swapView(PerspectiveCamera* Cam) {
 	if (this->togglePersonView) {
 		this->togglePersonView = false;
+		ViewTag LastView = this->CurrentView;
 		if (this->CurrentView != ViewTag::THIRD_PERSON) {
 			this->CurrentView = ViewTag::THIRD_PERSON;
-			Cam->setCenter(this->lastCamCenter);
+			if (LastView != ViewTag::OVERHEAD)
+				Cam->setCenter(this->lastCamCenter);
 		}
 		else if (this->CurrentView != ViewTag::FIRST_PERSON) {
 			this->CurrentView = ViewTag::FIRST_PERSON;
@@ -53,7 +55,6 @@ void Player::swapView(PerspectiveCamera* Cam) {
 		this->toggleOverhead = false;
 		if (this->CurrentView != ViewTag::OVERHEAD) {
 			this->CurrentView = ViewTag::OVERHEAD;
-			Cam->setCenter(this->lastCamCenter);
 		}
 	}
 }
