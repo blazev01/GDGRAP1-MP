@@ -15,12 +15,10 @@ bool holdingE = false;
 bool holdingA = false;
 bool holdingS = false;
 bool holdingD = false;
-
+bool holdingF = false;
 
 bool LMB = false;
 bool LMBPressed = false;
-
-bool isJumping = false;
 
 double lastX = 0;
 double lastY = 0;
@@ -29,6 +27,8 @@ double clickX = 0;
 double clickY = 0;
 
 int dragMargin = 64;
+
+int currentIntensity = 1;
 
 ViewTag CurrentView = ViewTag::THIRD_PERSON;
 
@@ -41,8 +41,6 @@ void keyCallback(
     int mod
 )
 {
-    // No keyboard presses while jumping.
-
     if (key == GLFW_KEY_W &&
         action == GLFW_PRESS &&
         action != GLFW_RELEASE) {
@@ -117,11 +115,6 @@ void keyCallback(
     if (key == GLFW_KEY_2 &&
         action == GLFW_RELEASE) {
         released2 = true;
-    }
-
-    if (key == GLFW_KEY_C &&
-        action == GLFW_PRESS) {
-        isJumping = true;
     }
 
 }
@@ -261,6 +254,18 @@ void Game::processEvents() {
     if (draggingLMBUp) this->Player1->setIsOrbitingUp(true);
     else if (draggingLMBDown) this->Player1->setIsOrbitingDown(true);
 
+    if (releasedF) {
+        releasedF = false;
+        if (currentIntensity > 0 && currentIntensity < 3) {
+            currentIntensity++;
+        }
+        else if (currentIntensity == 3) {
+            currentIntensity = 1;
+        }
+        else {//in case out of bounds
+            currentIntensity = 1;
+        }
+    }
 
     switch (CurrentView) {
     case ViewTag::THIRD_PERSON:
@@ -293,11 +298,6 @@ void Game::processEvents() {
     default:
         break;
     }
-    if (isJumping) {
-        isJumping = false;
-        this->Player1->setIsJumping(true);
-    }
-
 }
 
 void Game::update() {
@@ -309,8 +309,7 @@ void Game::update() {
     switch (CurrentView) {
     case ViewTag::THIRD_PERSON:
         this->Player1->circle(this->Cameras[0]);
-        this->Player1->jump(this->Entities[0], this->Lights[0]);
-    this->Player1->turn(this->Entities[0], this->Lights[0], this->Cameras[1]);
+        this->Player1->turn(this->Entities[0], this->Lights[0], this->Cameras[1]);
         this->Player1->move(this->Entities[0], this->Lights[0], this->Cameras[0], this->Cameras[1]);
         break;
     case ViewTag::FIRST_PERSON:
@@ -354,6 +353,7 @@ void Game::update() {
             p->setShaders(this->BaseShaders);
         }
     }
+
 }
 
 void Game::render() {
