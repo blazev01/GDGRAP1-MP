@@ -1,5 +1,5 @@
 #include "Player.hpp"
-
+#include "iostream"
 using namespace models;
 
 // @brief The constructor of the Player class.
@@ -34,6 +34,7 @@ Player::Player(glm::vec3 position, glm::vec3 center, ViewTag CurrentView) {
 	this->isTurningLeft = false;
 	this->isMovingForward = false;
 	this->isMovingBackward = false;
+	this->isJumping = false;
 }
 
 void Player::swapView(PerspectiveCamera* Cam) {
@@ -129,7 +130,6 @@ void Player::pan(Camera* Cam) {
 
 		Cam->movePositionWithCenter(newPos);
 	}
-	
 }
 
 
@@ -187,6 +187,24 @@ void Player::move(Model3D* Model, Light* FlashLight, Camera* ViewCam, Camera* Ta
 		ViewCam->movePositionWithCenter(camPos);
 		TankCam->moveCenterWithPosition(camPos);
 		FlashLight->setPosition(TankCam->getCenter());
+	}
+}
+
+void Player::jump(Model3D* Model, Light* FlashLight) {
+	if (isJumping) {
+		float gravity = -0.1f;
+
+		Model->translate(0.0f, velocityY, 0.0f);
+		velocityY += gravity * jumpTime;
+		
+		jumpTime += 1.f / 60.0f;
+		if (Model->getPosition().y <= 0.0f) {
+			Model->setPosition(glm::vec3(Model->getPosition().x, 0.0f, Model->getPosition().z));
+			velocityY = 0.25f;
+			jumpTime = 0.01f;
+			this->isJumping = false;
+		}
+
 	}
 }
 
@@ -337,4 +355,12 @@ void Player::setIsMovingForward(bool isMovingForward) {
 // @param isMovingBackward - boolean variable, self-explanatory
 void Player::setIsMovingBackward(bool isMovingBackward) {
 	this->isMovingBackward = isMovingBackward;
+}
+
+bool Player::getIsJumping() {
+	return this->isJumping;
+}
+
+void Player::setIsJumping(bool isJumping) {
+	this->isJumping = isJumping;
 }
